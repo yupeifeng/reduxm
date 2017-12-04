@@ -1,4 +1,4 @@
-import rtrdcon from './rtrdcon';
-import reducermain from  './reducermain';
+import RtRdCon from './rtrdcon';
+import ReducerMain from  './reducermain';
 
-export { rtrdcon , reducermain };
+export { RtRdCon , ReducerMain };
