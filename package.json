@@ -1,10 +1,28 @@
 {
     "name": "reducermanger",
-    "version": "1.0.0",
-    "main": "index.js",
+    "version": "1.0.1",
+    "description": "Redux's reducer management and leave page data destruction",
+    "main": "lib/index.js",
     "scripts": {
         "compile": "babel -d lib/ src/"
     },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/yupeifeng/reducermanger.git"
+    },
+    "keywords": [
+        "redux",
+        "reducer",
+        "management",
+        "data",
+        "destruction"
+    ],
+    "author": "yupeifeng",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/yupeifeng/reducermanger/issues"
+    },
+    "homepage": "https://github.com/yupeifeng/reducermanger#readme",
     "dependencies": {
         "immutable": "^3.8.2",
         "react": "^16.1.0",
