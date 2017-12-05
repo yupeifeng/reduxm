@@ -17,10 +17,10 @@ export default class ReducerMain {
 	) {
 		this.initialData[pageName] = Immutable.fromJS(initialState).toJS();
 
-		let reducer = (state = Object.assign(initialState, excludeState), action = {}) => {
+		let reducer = (state = Object.assign({}, initialState, excludeState), action = {}) => {
 			switch (action['type']) {
 				case `${pageName}_sys_restState`:
-					return Object.assign(state, Immutable.fromJS(this.initialData[pageName]).toJS());
+					return Object.assign({}, state, Immutable.fromJS(this.initialData[pageName]).toJS());
 				default:
 					return actionFun(state, action);
 			}
