@@ -1,5 +1,10 @@
 ## Redux's reducer management and leave page data destruction
-### 处理Redux的reducer集中管理的问题以及离开页面再次进入该页面的数据初始化问题
+### 
+(1)处理Redux的reducer集中管理的问题
+
+(2)防止action的type重复问题
+
+(3)离开页面再次进入该页面的数据初始化问题
 ```markdown
 ├── lib
 │

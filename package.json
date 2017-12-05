@@ -1,6 +1,6 @@
 {
     "name": "reducermanger",
-    "version": "1.0.4",
+    "version": "1.0.6",
     "description": "Redux's reducer management and leave page data destruction",
     "main": "lib/index.js",
     "scripts": {
@@ -26,7 +26,6 @@
     "homepage": "https://github.com/yupeifeng/reducermanger#readme",
     "dependencies": {
         "immutable": "^3.8.2",
-        "react": "^16.1.0",
         "redux": "^3.7.2",
         "redux-thunk": "^2.2.0"
     },

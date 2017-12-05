@@ -2,78 +2,45 @@ import { combineReducers } from 'redux';
 import Immutable from 'immutable';
 
 export default class ReducerMain {
-	static reducer = [];
+	static reducer = {};
 
 	static actionType = {};
 
-	static saveInitialState = {};
+	static initialData = {};
 
-	static extend(target, source) {
-		let allObject = {};
+	static initReducer(
+		actionType = {},
+		initialState = {},
+		excludeState = {},
+		actionFun = (state, action) => {},
+		pageName = ''
+	) {
+		this.initialData[pageName] = Immutable.fromJS(initialState).toJS();
 
-		for (let obj in target) {
-			allObject[obj] = target[obj];
-		}
-		for (let obj in source) {
-			allObject[obj] = source[obj];
-		}
-		return allObject;
-	}
+		let reducer = (state = Object.assign(initialState, excludeState), action = {}) => {
+			switch (action['type']) {
+				case `${pageName}_sys_restState`:
+					return Object.assign(state, Immutable.fromJS(this.initialData[pageName]).toJS());
+				default:
+					return actionFun(state, action);
+			}
+		};
 
-	static addPageName(actionType, pageName) {
+		this.reducer[pageName] = reducer;
+
 		for (let i in actionType) {
 			actionType[i] = `${pageName}_${actionType[i]}`;
 		}
 
 		actionType.sys_restState = `${pageName}_sys_restState`;
 
-		return actionType;
-	}
+		this.actionType[pageName] = actionType;
 
-	static addSysRestState(pageReducer, pageName) {
-		this.saveInitialState[pageName] = Immutable.fromJS(pageReducer.initialState).toJS();
-
-		let initialState = pageReducer.initialState;
-		let excludeState = pageReducer.excludeState;
-		let actionFun = pageReducer.actionFun;
-
-		let reducerExt = (state = this.extend(initialState, excludeState), action = {}) => {
-			switch (action['type']) {
-				case `${pageName}_sys_restState`:
-					return this.extend(state, Immutable.fromJS(this.saveInitialState[pageName]).toJS());
-				default:
-					return actionFun(state, action);
-			}
-		};
-
-		return reducerExt;
-	}
-
-	static initReducer(actionType, initialState, excludeState, actionFun, pageName) {
-		this.reducer.push({
-			pageName: pageName,
-			pageReducer: {
-				initialState: initialState,
-				excludeState: excludeState,
-				actionFun: actionFun
-			}
-		});
-
-		this.actionType[pageName] = this.addPageName(actionType, pageName);
-
-		return this.reducer;
+		return true;
 	}
 
 	static getReducer() {
-		let combineReducersParams = {};
-
-		this.reducer.forEach(item => {
-			if (item) {
-				combineReducersParams[item.pageName] = this.addSysRestState(item.pageReducer, item.pageName);
-			}
-		});
-
-		return combineReducers(combineReducersParams);
+		return combineReducers(this.reducer);
 	}
 
 	static getActionType(pageName) {

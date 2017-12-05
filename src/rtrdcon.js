@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 const RtRdCon = (mapStateToProps, mapDispatchToProps, ReactDom, pageName) => {
-	class ReactDomExtWillUnmount extends ReactDom {
+	class ReactDomExt extends ReactDom {
 		componentWillUnmount() {
 			let that = this;
 			let sysRestState = that.props.sysRestState;
@@ -28,7 +28,7 @@ const RtRdCon = (mapStateToProps, mapDispatchToProps, ReactDom, pageName) => {
 		};
 	};
 
-	return connect(mapStateToPropsExt, mapDispatchToPropsExt)(ReactDomExtWillUnmount);
+	return connect(mapStateToPropsExt, mapDispatchToPropsExt)(ReactDomExt);
 };
 
 export default RtRdCon;
