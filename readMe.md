@@ -31,56 +31,58 @@
 ```markdown
  action.js:
 
-    import { ReducerMain } from 'reducermanger';
-    const evaluationStaType = ReducerMain.getActionType('evaluationSta');
+   import { getActionType } from 'reducermanger';
+   const homeType = getActionType('Home');
+   
 
  index.js:
 
-    import { RtRdCon, ReducerMain } from 'reducermanger';
-    const evaluationStaType = ReducerMain.getActionType('evaluationSta');
-    export default RtRdCon(mapStateToProps, mapDispatchToProps, EvaluationSta, 'evaluationSta');
+    import { RtRdCon, getActionType } from 'reducermanger';
+    const homeType = getActionType('Home');
+    @RtRdCon
+    export default class Home extends React.Component{
+        static mapStateToProps = (state, ownProps) => {
+            return {
+                Home: state.Home
+            };
+        };
+    
+        static mapDispatchToProps = (dispatch, ownProps) => {
+            return {
+            };
+        };
+    }
+    
 
  reducer.js:
 
-    import { ReducerMain } from 'reducermanger';
-    export const evaluationSta = ReducerMain.initReducer(
-    	{
-    		change_projectList: 'change_projectList',
-    		change_searchForm: 'change_searchForm',
-    		change_selectProjectId: 'change_selectProjectId',
-    		change_projectStatistics: 'change_projectStatistics'
-    	},
-    	{
-    		searchForm: {
-    			count: 0,
-    			pageIndex: 1,
-    			pageSize: 100000
-    		},
-    		selectProjectId: '',
-    		projectList: [],
-    		projectStatistics: {}
-    	},
-    	{},
-    	(state, action) => {
-    		switch (action.type) {
-    			case ReducerMain.getActionType('evaluationSta').change_projectList:
-    				return { ...state, projectList: action.projectList };
-    			case ReducerMain.getActionType('evaluationSta').change_searchForm:
-    				return { ...state, searchForm: action.searchForm };
-    			case ReducerMain.getActionType('evaluationSta').change_selectProjectId:
-    				return { ...state, selectProjectId: action.selectProjectId };
-    			case ReducerMain.getActionType('evaluationSta').change_projectStatistics:
-    				return { ...state, projectStatistics: action.projectStatistics };
-    			default:
-    				return { ...state };
-    		}
-    	},
-    	'evaluationSta'
-    );
+    import { store, storeProps } from 'reducermanger';
+    @store
+    class Home {
+        @storeProps('change_searchForm', true)
+        static searchForm = {
+            count: 0,
+            pageIndex: 1,
+            pageSize: 100000
+        };
+    
+        @storeProps('change_selectProjectId', true)
+        static selectProjectId = "";
+    
+        @storeProps('change_projectList', true)
+        static projectList = [];
+    
+        @storeProps('change_statistics', true)
+        static statistics = {};
+    
+        @storeProps('change_projectStatistics', true)
+        static projectStatistics = {};
+    }
+    
 
  app.js:
-    import './statistics/evaluationsta/reducer';
-    import { ReducerMain } from 'reducermanger';
-    const store = createStore(ReducerMain.getReducer(), applyMiddleware(thunk));
+    import './home/reducer';
+    import { getStore } from 'reducermanger';
+    const store = createStore(getStore(), applyMiddleware(thunk));
 
 ```

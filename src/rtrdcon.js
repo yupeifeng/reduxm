@@ -1,8 +1,20 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-const RtRdCon = (mapStateToProps, mapDispatchToProps, ReactDom, pageName) => {
-	class ReactDomExt extends ReactDom {
+const RtRdCon = target => {
+	if (!target.name || typeof target.name != 'string') {
+		throw new Error(`target.name Invalid value of type ${typeof target.name} for RtRdCon.`);
+	}
+
+	if (!target.mapStateToProps || typeof target.mapStateToProps != 'function') {
+		throw new Error(`mapStateToProps Invalid value of type ${typeof target.mapStateToProps} for RtRdCon.`);
+	}
+
+	if (!target.mapDispatchToProps || typeof target.mapDispatchToProps != 'function') {
+		throw new Error(`mapStateToProps Invalid value of type ${typeof target.mapDispatchToProps} for RtRdCon.`);
+	}
+
+	class reactDom extends target {
 		componentWillUnmount() {
 			let that = this;
 			let sysRestState = that.props.sysRestState;
@@ -10,25 +22,25 @@ const RtRdCon = (mapStateToProps, mapDispatchToProps, ReactDom, pageName) => {
 		}
 	}
 
-	let mapStateToPropsExt = (state, ownProps) => {
+	let mapStateToProps = (state, ownProps) => {
 		return {
-			...mapStateToProps(state, ownProps)
+			...target.mapStateToProps(state, ownProps)
 		};
 	};
 
-	let mapDispatchToPropsExt = (dispatch, ownProps) => {
+	let mapDispatchToProps = (dispatch, ownProps) => {
 		return {
-			...mapDispatchToProps(dispatch, ownProps),
+			...target.mapDispatchToProps(dispatch, ownProps),
 			sysRestState: bindActionCreators(
 				() => dispatch => {
-					dispatch({ type: `${pageName}_sys_restState` });
+					dispatch({ type: `${target.name}_sys_restState` });
 				},
 				dispatch
 			)
 		};
 	};
 
-	return connect(mapStateToPropsExt, mapDispatchToPropsExt)(ReactDomExt);
+	return connect(mapStateToProps, mapDispatchToProps)(reactDom);
 };
 
 export default RtRdCon;

@@ -1,4 +1,4 @@
 import RtRdCon from './rtrdcon';
-import ReducerMain from './reducermain';
+import { store, storeProps, getStore, getActionType } from './store';
 
-export { RtRdCon, ReducerMain };
+export { RtRdCon, store, storeProps, getStore, getActionType };
