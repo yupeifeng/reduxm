@@ -1,11 +1,11 @@
 import ReducerFactory from './reducerfactory';
 
-export const store = target => {
+export const store = (storeName = '') => target => {
 	if (!target || typeof target != 'function') {
 		throw new Error(`target Invalid value of type ${typeof target} for appStore.`);
 	}
 
-	ReducerFactory.initReducer(target);
+	ReducerFactory.initReducer(storeName, target);
 };
 
 export const storeProps = (actionType = '', destroy = true) => (target, key) => {

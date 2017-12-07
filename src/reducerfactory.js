@@ -8,12 +8,7 @@ export default class ReducerFactory {
 
 	static initialData = {};
 
-	static initReducer(target = {}) {
-		if (!target.name || typeof target.name != 'string') {
-			throw new Error(`target.name Invalid value of type ${typeof target.name} for initReducer.`);
-		}
-
-		let storeName = target.name;
+	static initReducer(storeName, target = {}) {
 		let initialState = {};
 		let excludeState = {};
 		let actionTypes = {};
