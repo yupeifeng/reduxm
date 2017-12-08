@@ -1,6 +1,6 @@
 {
     "name": "reducermanager",
-    "version": "1.0.2",
+    "version": "1.1.1",
     "description": "Redux's reducer management and leave page data destruction",
     "main": "lib/index.js",
     "scripts": {

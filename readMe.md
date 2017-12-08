@@ -27,62 +27,32 @@
 └── readMe.md
 ```
 
-### Example
+### describe
 ```markdown
- action.js:
+ /**
+  * 数据管理层
+  */
+ import Store from './store/store'; //提供getStore方法获取整个store以及getActionType方法获取对应store的actionType入参storeName
+ const store = Store.store; //store注解 入参storeName
+ const storeProps = Store.storeProps; //store数据更改响应type注解 入参actionType
+ const storeDestroy = Store.storeDestroy; //数据销毁注解（离开页面数据初始化）
+ const storeLogs = Store.storeLogs; //数据改变日志跟踪注解
+ 
+ /**
+  * 数据、reactDom、redux链接层
+  */
+ import ConnectStore from './connect/connectstore'; //链接层注解 入参destroyStoreList(离开页面初始化store)、storeList(页面所需store)
+ 
+ /**
+  * 事件管理层
+  */
+ import Action from './action/action';
+ 
+ const action = Action.action; //action注解 入参actionName
+ const actionProps = Action.actionProps; //action层响应函数注解 入参actionFunName
+ const actionInjection = Action.actionInjection; //action事件注入注解,注入的react页面 入参actionName
+ 
+ export { Store, store, storeProps, storeDestroy, storeLogs, ConnectStore, action, actionProps, actionInjection };
 
-   import { getActionType } from 'reducermanger';
-   const homeType = getActionType('Home');
-   
-
- index.js:
-
-    import { RtRdCon, getActionType } from 'reducermanger';
-    const homeType = getActionType('Home');
-    @RtRdCon
-    export default class Home extends React.Component{
-        static mapStateToProps = (state, ownProps) => {
-            return {
-                Home: state.Home
-            };
-        };
-    
-        static mapDispatchToProps = (dispatch, ownProps) => {
-            return {
-            };
-        };
-    }
-    
-
- reducer.js:
-
-    import { store, storeProps } from 'reducermanger';
-    @store
-    class Home {
-        @storeProps('change_searchForm', true)
-        static searchForm = {
-            count: 0,
-            pageIndex: 1,
-            pageSize: 100000
-        };
-    
-        @storeProps('change_selectProjectId', true)
-        static selectProjectId = "";
-    
-        @storeProps('change_projectList', true)
-        static projectList = [];
-    
-        @storeProps('change_statistics', true)
-        static statistics = {};
-    
-        @storeProps('change_projectStatistics', true)
-        static projectStatistics = {};
-    }
-    
-
- app.js:
-    import './home/reducer';
-    import { getStore } from 'reducermanger';
-    const store = createStore(getStore(), applyMiddleware(thunk));
 
 ```
