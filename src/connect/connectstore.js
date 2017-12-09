@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-const ConnectStore = (destroyStoreList = [], storeList = []) => target => {
+const ConnectStore = (storeList = [], destroyStoreList = []) => target => {
 	class reactDom extends target {
 		componentWillUnmount() {
 			let that = this;

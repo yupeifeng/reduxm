@@ -7,23 +7,27 @@ export default class Store {
 			return;
 		}
 
+		if (!target || typeof target != 'function') {
+			throw new Error(`target Invalid value of type ${typeof target} for store.`);
+		}
+
 		let initialState = {};
 		let excludeState = {};
 		let actionTypes = {};
 		let actions = {};
 
 		for (let i in target) {
-			if (target[i]['reducerManager_destroy']) {
-				if (target[i]['reducerManager_value'] === undefined) {
+			if (target[i]['reducerManager_storeDestroy']) {
+				if (target[i]['reducerManager_storeValue'] === undefined) {
 					initialState[i] = target[i];
 				} else {
-					initialState[i] = target[i]['reducerManager_value'];
+					initialState[i] = target[i]['reducerManager_storeValue'];
 				}
 			} else {
-				if (target[i]['reducerManager_value'] === undefined) {
+				if (target[i]['reducerManager_storeValue'] === undefined) {
 					excludeState[i] = target[i];
 				} else {
-					excludeState[i] = target[i]['reducerManager_value'];
+					excludeState[i] = target[i]['reducerManager_storeValue'];
 				}
 			}
 
@@ -31,12 +35,32 @@ export default class Store {
 				actionTypes[target[i]['reducerManager_actionType']] = `${storeName}_${target[i]['reducerManager_actionType']}`;
 
 				actions[`${storeName}_${target[i]['reducerManager_actionType']}`] = (state, action) => {
-					if (target[i]['reducerManager_log']) {
-						console.log(
-							`actionType:${target[i]['reducerManager_actionType']}  storeName:${i}  storeSource:${JSON.stringify(
-								action[i]
-							)}`
-						);
+					if (target[i]['reducerManager_storeLogs']) {
+						switch (target[i]['reducerManager_storeLogs']) {
+							case 'waring':
+								console.warn(
+									`actionType:${target[i]['reducerManager_actionType']}  storeName:${i}  storeSource:${JSON.stringify(
+										action[i]
+									)}`
+								);
+								break;
+							case 'log':
+								console.log(
+									`actionType:${target[i]['reducerManager_actionType']}  storeName:${i}  storeSource:${JSON.stringify(
+										action[i]
+									)}`
+								);
+								break;
+							case 'error':
+								console.error(
+									`actionType:${target[i]['reducerManager_actionType']}  storeName:${i}  storeSource:${JSON.stringify(
+										action[i]
+									)}`
+								);
+								break;
+							default:
+								break;
+						}
 					}
 					let arg = {};
 					arg[i] = action[i];
@@ -61,9 +85,9 @@ export default class Store {
 			throw new Error(`key Invalid value of type ${typeof key} for appStoreProps.`);
 		}
 
-		if (target[key]['reducerManager_value'] === undefined) {
+		if (target[key]['reducerManager_storeValue'] === undefined) {
 			target[key] = {
-				reducerManager_value: target[key],
+				reducerManager_storeValue: target[key],
 				reducerManager_actionType: actionType
 			};
 		} else {
@@ -81,18 +105,18 @@ export default class Store {
 			throw new Error(`key Invalid value of type ${typeof key} for storeDestroy.`);
 		}
 
-		if (target[key]['reducerManager_value'] === undefined) {
+		if (target[key]['reducerManager_storeValue'] === undefined) {
 			target[key] = {
-				reducerManager_value: target[key],
-				reducerManager_destroy: true
+				reducerManager_storeValue: target[key],
+				reducerManager_storeDestroy: true
 			};
 		} else {
-			target[key]['reducerManager_destroy'] = true;
+			target[key]['reducerManager_storeDestroy'] = true;
 		}
 		return target;
 	};
 
-	static storeLogs = (target, key) => {
+	static storeLogs = level => (target, key) => {
 		if (!target || typeof target != 'function') {
 			throw new Error(`target Invalid value of type ${typeof target} for storeLogs.`);
 		}
@@ -101,13 +125,13 @@ export default class Store {
 			throw new Error(`key Invalid value of type ${typeof key} for storeLogs.`);
 		}
 
-		if (target[key]['reducerManager_value'] === undefined) {
+		if (target[key]['reducerManager_storeValue'] === undefined) {
 			target[key] = {
-				reducerManager_value: target[key],
-				reducerManager_log: true
+				reducerManager_storeValue: target[key],
+				reducerManager_storeLogs: level
 			};
 		} else {
-			target[key]['reducerManager_log'] = true;
+			target[key]['reducerManager_storeLogs'] = level;
 		}
 		return target;
 	};

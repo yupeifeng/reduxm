@@ -7,10 +7,35 @@ export default class Action {
 			return;
 		}
 
+		if (!target || typeof target != 'function') {
+			throw new Error(`target Invalid value of type ${typeof target} for action.`);
+		}
+
 		let actions = {};
 		for (let i in target) {
 			if (target[i]['reducerManager_actionFunName']) {
-				actions[target[i]['reducerManager_actionFunName']] = target[i]['reducerManager_actionProps'];
+				actions[target[i]['reducerManager_actionFunName']] = (...args) => dispatch => {
+					switch (target[i]['reducerManager_actionLogs']) {
+						case 'waring':
+							console.warn(
+								`actionFunName:${target[i]['reducerManager_actionFunName']} actionParams:${JSON.stringify(...args)}`
+							);
+							break;
+						case 'log':
+							console.log(
+								`actionFunName:${target[i]['reducerManager_actionFunName']} actionParams:${JSON.stringify(...args)}`
+							);
+							break;
+						case 'error':
+							console.error(
+								`actionFunName:${target[i]['reducerManager_actionFunName']} actionParams:${JSON.stringify(...args)}`
+							);
+							break;
+						default:
+							break;
+					}
+					target[i]['reducerManager_actionProps'](...args)(dispatch);
+				};
 			}
 		}
 
@@ -26,13 +51,33 @@ export default class Action {
 			throw new Error(`key Invalid value of type ${typeof key} for actionProps.`);
 		}
 
-		if (target[key]['reducerManager_actionProps']) {
-			target[key]['reducerManager_actionFunName'] = actionFunName;
-		} else {
+		if (target[key]['reducerManager_actionProps'] === undefined) {
 			target[key] = {
 				reducerManager_actionProps: target[key],
 				reducerManager_actionFunName: actionFunName
 			};
+		} else {
+			target[key]['reducerManager_actionFunName'] = actionFunName;
+		}
+		return target;
+	};
+
+	static actionLogs = level => (target, key) => {
+		if (!target || typeof target != 'function') {
+			throw new Error(`target Invalid value of type ${typeof target} for actionLogs.`);
+		}
+
+		if (!key || typeof key != 'string') {
+			throw new Error(`key Invalid value of type ${typeof key} for actionLogs.`);
+		}
+
+		if (target[key]['reducerManager_actionProps'] === undefined) {
+			target[key] = {
+				reducerManager_actionProps: target[key],
+				reducerManager_actionLogs: level
+			};
+		} else {
+			target[key]['reducerManager_actionLogs'] = level;
 		}
 		return target;
 	};
