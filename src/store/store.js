@@ -32,22 +32,25 @@ export default class Store {
 			if (storePropsSign[key]) {
 				actionTypes[storePropsSign[key]] = `${storeName}_${storePropsSign[key]}`;
 
+				let storeLogsSignKey = storeLogsSign[key];
+				let storePropsSignKey = storePropsSign[key];
+
 				actions[`${storeName}_${storePropsSign[key]}`] = (state, action) => {
-					if (storeLogsSign[key]) {
-						switch (storeLogsSign[key]) {
+					if (storeLogsSignKey) {
+						switch (storeLogsSignKey) {
 							case 'waring':
 								console.warn(
-									`actionType:${storePropsSign[key]}  storeName:${key}  storeSource:${JSON.stringify(action[key])}`
+									`actionType:${storePropsSignKey}  storeName:${key}  storeSource:${JSON.stringify(action[key])}`
 								);
 								break;
 							case 'log':
 								console.log(
-									`actionType:${storePropsSign[key]}  storeName:${key}  storeSource:${JSON.stringify(action[key])}`
+									`actionType:${storePropsSignKey}  storeName:${key}  storeSource:${JSON.stringify(action[key])}`
 								);
 								break;
 							case 'error':
 								console.error(
-									`actionType:${storePropsSign[key]}  storeName:${key}  storeSource:${JSON.stringify(action[key])}`
+									`actionType:${storePropsSignKey}  storeName:${key}  storeSource:${JSON.stringify(action[key])}`
 								);
 								break;
 							default:
