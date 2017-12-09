@@ -23,6 +23,8 @@ export default class ReducerFactory {
 		};
 
 		this.reducer[storeName] = reducer;
+
+		return true;
 	}
 
 	static getReducer() {

@@ -1,10 +1,13 @@
 import ActionFactory from './actionfactory';
 import { bindActionCreators } from 'redux';
 
+let actionPropsSign = {};
+let actionLogsSign = {};
+
 export default class Action {
 	static action = (actionName = '') => target => {
 		if (!actionName) {
-			return;
+			return target;
 		}
 
 		if (!target || typeof target != 'function') {
@@ -12,34 +15,32 @@ export default class Action {
 		}
 
 		let actions = {};
-		for (let i in target) {
-			if (target[i]['reducerManager_actionFunName']) {
-				actions[target[i]['reducerManager_actionFunName']] = (...args) => dispatch => {
-					switch (target[i]['reducerManager_actionLogs']) {
-						case 'waring':
-							console.warn(
-								`actionFunName:${target[i]['reducerManager_actionFunName']} actionParams:${JSON.stringify(...args)}`
-							);
-							break;
-						case 'log':
-							console.log(
-								`actionFunName:${target[i]['reducerManager_actionFunName']} actionParams:${JSON.stringify(...args)}`
-							);
-							break;
-						case 'error':
-							console.error(
-								`actionFunName:${target[i]['reducerManager_actionFunName']} actionParams:${JSON.stringify(...args)}`
-							);
-							break;
-						default:
-							break;
+		for (let key in target) {
+			if (actionPropsSign[key]) {
+				actions[actionPropsSign[key]] = (...args) => dispatch => {
+					if (actionLogsSign[key]) {
+						switch (actionLogsSign[key]) {
+							case 'waring':
+								console.warn(`actionFunName:${actionPropsSign[key]} actionParams:${JSON.stringify(...args)}`);
+								break;
+							case 'log':
+								console.log(`actionFunName:${actionPropsSign[key]} actionParams:${JSON.stringify(...args)}`);
+								break;
+							case 'error':
+								console.error(`actionFunName:${actionPropsSign[key]} actionParams:${JSON.stringify(...args)}`);
+								break;
+							default:
+								break;
+						}
 					}
-					target[i]['reducerManager_actionProps'](...args)(dispatch);
+					target[key](...args)(dispatch);
 				};
 			}
 		}
 
 		ActionFactory.initAction(actionName, actions);
+
+		return target;
 	};
 
 	static actionProps = (actionFunName = '') => (target, key) => {
@@ -51,14 +52,8 @@ export default class Action {
 			throw new Error(`key Invalid value of type ${typeof key} for actionProps.`);
 		}
 
-		if (target[key]['reducerManager_actionProps'] === undefined) {
-			target[key] = {
-				reducerManager_actionProps: target[key],
-				reducerManager_actionFunName: actionFunName
-			};
-		} else {
-			target[key]['reducerManager_actionFunName'] = actionFunName;
-		}
+		actionPropsSign[key] = actionFunName;
+
 		return target;
 	};
 
@@ -71,29 +66,33 @@ export default class Action {
 			throw new Error(`key Invalid value of type ${typeof key} for actionLogs.`);
 		}
 
-		if (target[key]['reducerManager_actionProps'] === undefined) {
-			target[key] = {
-				reducerManager_actionProps: target[key],
-				reducerManager_actionLogs: level
-			};
-		} else {
-			target[key]['reducerManager_actionLogs'] = level;
-		}
+		actionLogsSign[key] = level;
+
 		return target;
 	};
 
-	static actionInjection = (actionName = '') => (target, key) => {
+	static actionInjection = (actionName = '') => target => {
+		if (!target || typeof target != 'function') {
+			throw new Error(`target Invalid value of type ${typeof target} for actionInjection.`);
+		}
+
+		if (!actionName) {
+			return target;
+		}
+
 		let actions = ActionFactory.getAction(actionName);
 
-		target.mapDispatchToProps = (dispatch, ownProps) => {
+		target.mapDispatchToProps = dispatch => {
 			let mapDispatchToPropsParams = {};
 
-			for (let i in actions) {
-				if (actions[i]) {
-					mapDispatchToPropsParams[i] = bindActionCreators(actions[i], dispatch);
+			for (let key in actions) {
+				if (actions[key]) {
+					mapDispatchToPropsParams[key] = bindActionCreators(actions[key], dispatch);
 				}
 			}
 			return mapDispatchToPropsParams;
 		};
+
+		return target;
 	};
 }

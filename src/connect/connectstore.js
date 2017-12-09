@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 const ConnectStore = (storeList = [], destroyStoreList = []) => target => {
+	if (!target || typeof target != 'function') {
+		throw new Error(`target Invalid value of type ${typeof target} for ConnectStore.`);
+	}
+
 	class reactDom extends target {
 		componentWillUnmount() {
 			let that = this;
@@ -11,44 +15,42 @@ const ConnectStore = (storeList = [], destroyStoreList = []) => target => {
 		}
 	}
 
-	let mapStateToProps = (state, ownProps) => {
+	let mapStateToProps = state => {
 		let mapStateToPropsParams = {};
 
-		storeList.forEach(item => {
-			mapStateToPropsParams[item] = state[item];
+		storeList.forEach(key => {
+			mapStateToPropsParams[key] = state[key];
 		});
 
 		return mapStateToPropsParams;
 	};
 
 	let mapDispatchToProps = (dispatch, ownProps) => {
-		return {
-			sysRestState: bindActionCreators(
-				() => dispatch => {
-					destroyStoreList.forEach(item => {
-						dispatch({ type: `${item}_sys_restState` });
-					});
-				},
-				dispatch
-			)
-		};
-	};
-
-	if (target.mapDispatchToProps) {
-		mapDispatchToProps = (dispatch, ownProps) => {
+		if (target.mapDispatchToProps) {
 			return {
 				...target.mapDispatchToProps(dispatch, ownProps),
 				sysRestState: bindActionCreators(
 					() => dispatch => {
-						destroyStoreList.forEach(item => {
-							dispatch({ type: `${item}_sys_restState` });
+						destroyStoreList.forEach(key => {
+							dispatch({ type: `${key}_sys_restState` });
 						});
 					},
 					dispatch
 				)
 			};
-		};
-	}
+		} else {
+			return {
+				sysRestState: bindActionCreators(
+					() => dispatch => {
+						destroyStoreList.forEach(key => {
+							dispatch({ type: `${key}_sys_restState` });
+						});
+					},
+					dispatch
+				)
+			};
+		}
+	};
 
 	return connect(mapStateToProps, mapDispatchToProps)(reactDom);
 };

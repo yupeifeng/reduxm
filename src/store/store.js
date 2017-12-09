@@ -1,6 +1,12 @@
 import ReducerFactory from './reducerfactory';
 import ActionTypeFactory from '../actiontype/actiontypefactory';
 
+let storePropsSign = {};
+
+let storeDestroySign = {};
+
+let storeLogsSign = {};
+
 export default class Store {
 	static store = (storeName = '') => target => {
 		if (!storeName) {
@@ -16,54 +22,42 @@ export default class Store {
 		let actionTypes = {};
 		let actions = {};
 
-		for (let i in target) {
-			if (target[i]['reducerManager_storeDestroy']) {
-				if (target[i]['reducerManager_storeValue'] === undefined) {
-					initialState[i] = target[i];
-				} else {
-					initialState[i] = target[i]['reducerManager_storeValue'];
-				}
+		for (let key in target) {
+			if (storeDestroySign[key]) {
+				initialState[key] = target[key];
 			} else {
-				if (target[i]['reducerManager_storeValue'] === undefined) {
-					excludeState[i] = target[i];
-				} else {
-					excludeState[i] = target[i]['reducerManager_storeValue'];
-				}
+				excludeState[key] = target[key];
 			}
 
-			if (target[i]['reducerManager_actionType']) {
-				actionTypes[target[i]['reducerManager_actionType']] = `${storeName}_${target[i]['reducerManager_actionType']}`;
+			if (storePropsSign[key]) {
+				actionTypes[storePropsSign[key]] = `${storeName}_${storePropsSign[key]}`;
 
-				actions[`${storeName}_${target[i]['reducerManager_actionType']}`] = (state, action) => {
-					if (target[i]['reducerManager_storeLogs']) {
-						switch (target[i]['reducerManager_storeLogs']) {
+				actions[`${storeName}_${storePropsSign[key]}`] = (state, action) => {
+					if (storeLogsSign[key]) {
+						switch (storeLogsSign[key]) {
 							case 'waring':
 								console.warn(
-									`actionType:${target[i]['reducerManager_actionType']}  storeName:${i}  storeSource:${JSON.stringify(
-										action[i]
-									)}`
+									`actionType:${storePropsSign[key]}  storeName:${key}  storeSource:${JSON.stringify(action[key])}`
 								);
 								break;
 							case 'log':
 								console.log(
-									`actionType:${target[i]['reducerManager_actionType']}  storeName:${i}  storeSource:${JSON.stringify(
-										action[i]
-									)}`
+									`actionType:${storePropsSign[key]}  storeName:${key}  storeSource:${JSON.stringify(action[key])}`
 								);
 								break;
 							case 'error':
 								console.error(
-									`actionType:${target[i]['reducerManager_actionType']}  storeName:${i}  storeSource:${JSON.stringify(
-										action[i]
-									)}`
+									`actionType:${storePropsSign[key]}  storeName:${key}  storeSource:${JSON.stringify(action[key])}`
 								);
 								break;
 							default:
 								break;
 						}
 					}
+
 					let arg = {};
-					arg[i] = action[i];
+					arg[key] = action[key];
+
 					return Object.assign({}, state, arg);
 				};
 			}
@@ -74,6 +68,14 @@ export default class Store {
 		ActionTypeFactory.initActionType(storeName, actionTypes);
 
 		ReducerFactory.initReducer(storeName, initialState, excludeState, actions);
+
+		storePropsSign = {};
+
+		storeDestroySign = {};
+
+		storeLogsSign = {};
+
+		return true;
 	};
 
 	static storeProps = (actionType = '') => (target, key) => {
@@ -85,14 +87,8 @@ export default class Store {
 			throw new Error(`key Invalid value of type ${typeof key} for appStoreProps.`);
 		}
 
-		if (target[key]['reducerManager_storeValue'] === undefined) {
-			target[key] = {
-				reducerManager_storeValue: target[key],
-				reducerManager_actionType: actionType
-			};
-		} else {
-			target[key]['reducerManager_actionType'] = actionType;
-		}
+		storePropsSign[key] = actionType;
+
 		return target;
 	};
 
@@ -105,14 +101,8 @@ export default class Store {
 			throw new Error(`key Invalid value of type ${typeof key} for storeDestroy.`);
 		}
 
-		if (target[key]['reducerManager_storeValue'] === undefined) {
-			target[key] = {
-				reducerManager_storeValue: target[key],
-				reducerManager_storeDestroy: true
-			};
-		} else {
-			target[key]['reducerManager_storeDestroy'] = true;
-		}
+		storeDestroySign[key] = true;
+
 		return target;
 	};
 
@@ -125,14 +115,8 @@ export default class Store {
 			throw new Error(`key Invalid value of type ${typeof key} for storeLogs.`);
 		}
 
-		if (target[key]['reducerManager_storeValue'] === undefined) {
-			target[key] = {
-				reducerManager_storeValue: target[key],
-				reducerManager_storeLogs: level
-			};
-		} else {
-			target[key]['reducerManager_storeLogs'] = level;
-		}
+		storeLogsSign[key] = level;
+
 		return target;
 	};
 
