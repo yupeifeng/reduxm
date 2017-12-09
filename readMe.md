@@ -101,6 +101,7 @@
  
  index.js:
  ...
+ import './action';
  import { ConnectStore, actionInjection } from 'reducermanager'; 
  @ConnectStore(['Home'], ['Home'])
  @actionInjection('HomeAction')
