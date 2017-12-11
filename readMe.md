@@ -73,8 +73,8 @@
  reducer.js：
  ...
  import { store, storeProps, storeDestroy, storeLogs} from 'reducermanager';
- @store('Home')
- class Home {
+ @store('HomeStore')
+ class HomeStore {
  	@storeProps('change_searchForm')
  	@storeDestroy
  	@storeLogs('log')
@@ -88,7 +88,7 @@
  action.js:
  ...
  import { Store, action, actionProps, actionLogs } from 'reducermanager';
- const homeType = Store.getActionType('Home');
+ const homeType = Store.getActionType('HomeStore');
  @action('HomeAction')
  class HomeAction {
     @actionProps('initProjectManagerList')
@@ -103,12 +103,12 @@
  ...
  import './action';
  import { ConnectStore, actionInjection } from 'reducermanager'; 
- @ConnectStore(['Home'], ['Home'])
+ @ConnectStore(['HomeStore'], ['HomeStore'])
  @actionInjection('HomeAction')
  export default class Home extends React.Component {
     componentDidMount() {
  		let that = this;
- 		that.props.initProjectManagerList(that.props.Home.searchForm);
+ 		that.props.initProjectManagerList(that.props.HomeStore.searchForm);
  	}
  }
  
