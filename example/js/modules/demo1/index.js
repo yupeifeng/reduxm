@@ -3,7 +3,7 @@ import { Layout, Breadcrumb, Button } from 'antd';
 import 'date-util';
 import ModalTip from 'modalTip';
 import './action';
-import { ConnectStore, actionInjection } from 'reducermanager/index';
+import { ConnectStore, actionInjection } from 'reducermanager';
 
 const { Content } = Layout;
 

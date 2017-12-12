@@ -1,6 +1,6 @@
 import fetch from 'fetch/fetch';
 import ModalTip from 'modalTip';
-import { Store, action, actionProps, actionLogs } from 'reducermanager/index';
+import { Store, action, actionProps, actionLogs } from 'reducermanager';
 
 const demo1Type = Store.getActionType('demo1Store');
 

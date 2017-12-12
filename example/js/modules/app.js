@@ -9,7 +9,7 @@ import HeaderMenu from './components/heard';
 import SiderMenu from './components/sider';
 import './css/main.css';
 
-import { Store } from 'reducermanager/index';
+import { Store } from 'reducermanager';
 import './demo1/reducer';
 import './demo2/reducer';
 const store = createStore(Store.getStore(), applyMiddleware(thunk));

@@ -1,4 +1,4 @@
-import { store, storeProps, storeDestroy, storeLogs } from 'reducermanager/index';
+import { store, storeProps, storeDestroy, storeLogs } from 'reducermanager';
 
 @store('demo1Store')
 class demo1 {

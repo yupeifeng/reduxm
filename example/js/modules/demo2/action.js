@@ -1,6 +1,6 @@
 import fetch from 'fetch/fetch';
 import ModalTip from 'modalTip';
-import { Store, action, actionProps } from 'reducermanager/index';
+import { Store, action, actionProps } from 'reducermanager';
 const demo2Type = Store.getActionType('demo2Store');
 
 let getColumnList = userCode => {
