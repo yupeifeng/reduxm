@@ -1,0 +1,53 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "build": "npm install && webpack --config webpack.config.js -w",
+    "start": "webpack-dev-server --env development"
+  },
+  "dependencies": {
+    "antd": "^2.13.10",
+    "babel-plugin-import": "^1.2.1",
+    "echarts": "^3.8.5",
+    "immutable": "^3.8.2",
+    "moment": "^2.19.2",
+    "react": "^16.1.0",
+    "react-dom": "^16.1.0",
+    "react-rangeslider": "^2.2.0",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.4"
+  },
+  "devDependencies": {
+    "mockjs": "*",
+    "object-assign": "*",
+    "ejs": "^2.5.7",
+    "scriptjs": "^2.5.8",
+    "sass-loader": "^6.0.6",
+    "css-loader": "0.28.1",
+    "extract-text-webpack-plugin": "^2.1.2",
+    "style-loader": "^0.12.3",
+    "node-sass": "^4.5.3",
+    "babel-core": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "fetch-jsonp": "^1.1.1",
+    "whatwg-fetch": "^2.0.3",
+    "reducermanager": "^1.1.6"
+  }
+}
