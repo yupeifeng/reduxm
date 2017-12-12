@@ -11,7 +11,7 @@ module.exports = {
 		app: ['babel-polyfill', './modules/app.js']
 	}, //打包的js
 	devServer: {
-		contentBase: '../', //以public为根目录提供文件
+		contentBase: './', //以public为根目录提供文件
 		historyApiFallback: true,
 		inline: true,
 		port: 9999
@@ -69,7 +69,7 @@ module.exports = {
 				cssPath: css_path
 			},
 			from: './views/',
-			to: '../'
+			to: './'
 		}),
 		new ExtractTextPlugin({
 			filename: 'style.css',
