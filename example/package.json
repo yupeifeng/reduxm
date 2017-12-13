@@ -17,6 +17,7 @@
     "react-rangeslider": "^2.2.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "reducermanager": "^1.2.0",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.4"
   },
@@ -44,7 +45,6 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "fetch-jsonp": "^1.1.1",
-    "whatwg-fetch": "^2.0.3",
-    "reducermanager": "^1.1.8"
+    "whatwg-fetch": "^2.0.3"
   }
 }

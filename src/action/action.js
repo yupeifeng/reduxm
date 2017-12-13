@@ -21,13 +21,13 @@ export default class Action {
 					if (actionLogsSign[key]) {
 						switch (actionLogsSign[key]) {
 							case 'waring':
-								console.warn(`actionFunName:${actionPropsSign[key]} actionParams:${JSON.stringify(...args)}`);
+								console.warn(`actionFunName:${actionPropsSign[key]} actionParams:${JSON.stringify(args)}`);
 								break;
 							case 'log':
-								console.log(`actionFunName:${actionPropsSign[key]} actionParams:${JSON.stringify(...args)}`);
+								console.log(`actionFunName:${actionPropsSign[key]} actionParams:${JSON.stringify(args)}`);
 								break;
 							case 'error':
-								console.error(`actionFunName:${actionPropsSign[key]} actionParams:${JSON.stringify(...args)}`);
+								console.error(`actionFunName:${actionPropsSign[key]} actionParams:${JSON.stringify(args)}`);
 								break;
 							default:
 								break;

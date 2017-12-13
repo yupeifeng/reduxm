@@ -1,6 +1,6 @@
 import fetch from 'fetch/fetch';
 import ModalTip from 'modalTip';
-import { Store, action, actionProps } from 'reducermanager';
+import { Store, action, actionProps, actionLogs } from 'reducermanager';
 const demo2Type = Store.getActionType('demo2Store');
 
 let getColumnList = userCode => {
@@ -57,6 +57,7 @@ class demo2Action {
 	};
 
 	@actionProps('changeState')
+	@actionLogs('log')
 	static changeState = (type, name, value) => async dispatch => {
 		let store = { type: type };
 		store[name] = value;
