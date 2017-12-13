@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout, Breadcrumb, Input, Select } from 'antd';
 import './action';
-import { Store, action, actionProps, ConnectStore, actionInjection } from 'reducermanager';
+import { Store, ConnectStore, actionInjection } from 'reducermanager';
 const demo2Type = Store.getActionType('demo2Store');
 
 const { Option } = Select;

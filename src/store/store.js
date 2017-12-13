@@ -1,5 +1,9 @@
 import ReducerFactory from './reducerfactory';
 import ActionTypeFactory from '../actiontype/actiontypefactory';
+import React from 'react';
+import thunk from 'redux-thunk';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
 
 let storePropsSign = {};
 
@@ -123,8 +127,13 @@ export default class Store {
 		return target;
 	};
 
-	static getStore = () => {
-		return ReducerFactory.getReducer();
+	static createStore = router => {
+		if (!router || typeof router != 'object') {
+			throw new Error(`target Invalid value of type ${typeof router} for createStore.`);
+		}
+
+		let store = createStore(ReducerFactory.getReducer(), applyMiddleware(thunk));
+		return <Provider store={store}>{router}</Provider>;
 	};
 
 	static getActionType = (storeName = '') => {
