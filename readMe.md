@@ -92,8 +92,8 @@
  	    @actionProps('changeNeedCode')
  	    @actionLogs('log')
  	    static changeNeedCode = nickName => async dispatch => {
- 		        let needCode = await checkNeedCode(nickName);
- 		        dispatch({ type: demo1Type.change_needCode, needCode: needCode });
+ 		    let needCode = await checkNeedCode(nickName);
+ 		    dispatch({ type: demo1Type.change_needCode, needCode: needCode });
  	    };
     }
  
@@ -105,19 +105,19 @@
     @ConnectStore(['demo1Store'], ['demo1Store'])
     @actionInjection('demo1Action')
     export default class demo1 extends React.Component {
-	        componentDidMount() {
-		          let that = this;
-		          let changeNeedCode = that.props.changeNeedCode;
-		          changeNeedCode('zhanghao');
-	        }
-	            
-	        render() {
-        		  let that = this;
-        		  return (
-        			    <div>是否需要验证码{that.props.demo1Store.needCode}</div>
-        		   );
-        }
+	    componentDidMount() {
+		    let that = this;
+		    let changeNeedCode = that.props.changeNeedCode;
+		    changeNeedCode('zhanghao');
 	    }
+	            
+	    render() {
+        	let that = this;
+        	return (
+        		<div>是否需要验证码{that.props.demo1Store.needCode}</div>
+        	);
+        }
+	}
  
  
  app.js：
