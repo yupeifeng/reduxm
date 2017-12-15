@@ -23,7 +23,7 @@ const router = Store.createStore(
 				<Route exact path="/" component={demo1} />
 				<Route exact path="/demo/demo1" component={demo1} />
 				<Route exact path="/demo/demo2" component={demo2} />
-				{Store.getDevTools()}
+				{debug ? Store.getDevTools() : null}
 			</div>
 		</div>
 	</HashRouter>,
