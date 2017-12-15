@@ -2,8 +2,17 @@ import ReducerFactory from './reducerfactory';
 import ActionTypeFactory from '../actiontype/actiontypefactory';
 import React from 'react';
 import thunk from 'redux-thunk';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
+import { createDevTools } from 'redux-devtools';
+import LogMonitor from 'redux-devtools-log-monitor';
+import DockMonitor from 'redux-devtools-dock-monitor';
+
+let DevTools = createDevTools(
+	<DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
+		<LogMonitor theme="tomorrow" />
+	</DockMonitor>
+);
 
 let storePropsSign = {};
 
@@ -127,13 +136,25 @@ export default class Store {
 		return target;
 	};
 
-	static createStore = router => {
+	static createStore = (router, debug) => {
 		if (!router || typeof router != 'object') {
 			throw new Error(`target Invalid value of type ${typeof router} for createStore.`);
 		}
 
-		let store = createStore(ReducerFactory.getReducer(), applyMiddleware(thunk));
+		let store = null;
+
+		if (debug) {
+			let enhancer = compose(applyMiddleware(thunk), DevTools.instrument());
+
+			store = createStore(ReducerFactory.getReducer(), enhancer);
+		} else {
+			store = createStore(ReducerFactory.getReducer(), applyMiddleware(thunk));
+		}
 		return <Provider store={store}>{router}</Provider>;
+	};
+
+	static getDevTools = () => {
+		return <DevTools />;
 	};
 
 	static getActionType = (storeName = '') => {

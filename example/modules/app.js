@@ -13,6 +13,7 @@ import { Store } from 'reducermanager';
 const demo1 = asyncComponent(() => import(/* webpackChunkName: 'demo1' */ './demo1'));
 const demo2 = asyncComponent(() => import(/* webpackChunkName: 'demo2' */ './demo2'));
 
+let debug = true;
 const router = Store.createStore(
 	<HashRouter>
 		<div>
@@ -22,9 +23,11 @@ const router = Store.createStore(
 				<Route exact path="/" component={demo1} />
 				<Route exact path="/demo/demo1" component={demo1} />
 				<Route exact path="/demo/demo2" component={demo2} />
+				{Store.getDevTools()}
 			</div>
 		</div>
-	</HashRouter>
+	</HashRouter>,
+	debug
 );
 
 ReactDOM.render(router, document.getElementById('content'));
