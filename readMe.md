@@ -129,9 +129,8 @@
 	    <HashRouter>
             <Route exact path="/demo/demo1" component={demo1} />
             {debug ? Store.getDevTools() : null}
-		</div>
-	</HashRouter>,
-	debug
+	    </HashRouter>,
+	    debug
     );
     ReactDOM.render(router, document.getElementById('content'));
 
