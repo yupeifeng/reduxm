@@ -124,10 +124,14 @@
     ...
     import './demo1/reducer';
     import { Store } from 'reducermanager';
+    let debug = true;
     const router = Store.createStore(
 	    <HashRouter>
-		    	<Route exact path="/" component={demo1} />
-	    </HashRouter>
+            <Route exact path="/demo/demo1" component={demo1} />
+            {debug ? Store.getDevTools() : null}
+		</div>
+	</HashRouter>,
+	debug
     );
     ReactDOM.render(router, document.getElementById('content'));
 
