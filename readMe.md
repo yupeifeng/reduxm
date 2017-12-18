@@ -32,7 +32,14 @@
     /**
      * 数据管理层
      */
-    import Store from './store/store'; //提供createStore方法(入参reactRouter)绑定store后返回reactRouter、getActionType方法获取对应store的actionType(入参storeName)
+    
+    /**
+     * 提供createStore方法(入参reactRouter,debug)绑定store后返回reactRouter
+     * 提供getActionType方法获取对应store的actionType(入参storeName)
+     * 提供getDevTools方法,返回调试工具视图和Route平级使用
+     */
+    import Store from './store/store';
+    
     const store = Store.store; //store注解(入参storeName)
     const storeProps = Store.storeProps; //store数据更改响应type注解(入参actionType)
     const storeDestroy = Store.storeDestroy; //数据销毁注解(离开页面数据初始化）
