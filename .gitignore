@@ -3,3 +3,6 @@ package-lock.json
 example/build
 example/node_modules
 example/package-lock.json
+srctools/build
+srctools/node_modules
+srctools/package-lock.json
