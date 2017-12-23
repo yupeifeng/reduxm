@@ -9,6 +9,9 @@ const ConnectStore = (storeList = [], destroyStoreList = []) => target => {
 	class reactDom extends target {
 		componentWillUnmount() {
 			let that = this;
+			if (target.componentWillUnmount && typeof target.componentWillUnmount == 'function') {
+				target.componentWillUnmount.apply(that);
+			}
 			let sysRestState = that.props.sysRestState;
 			sysRestState();
 		}

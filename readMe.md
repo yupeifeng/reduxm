@@ -47,6 +47,18 @@
     
     /**
      * 数据、reactDom、redux链接层
+     * 由于我会继承你的ReactDom并重写componentWillUnmount生命周期
+     * 所以
+     * 在你的ReactDom想实现componentWillUnmount生命周期必须加上静态属性
+     * 并且上下文还是ReactDom
+     * 如下
+     *  static componentWillUnmount (){
+            this._cons();
+        }
+    
+     	_cons(){
+            console.log("生命周期销毁");
+        }
      */
     import ConnectStore from './connect/connectstore'; //链接层注解(入参storeList:页面所需storeName、destroyStoreList:离开页面初始化storeName)
     

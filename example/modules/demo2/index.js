@@ -13,6 +13,14 @@ const { Content } = Layout;
 @ConnectStore(['demo2Store'], ['demo2Store'])
 @actionInjection('demo2Action')
 export default class demo2 extends React.Component {
+	static componentWillUnmount() {
+		this._cons();
+	}
+
+	_cons() {
+		console.log('生命周期销毁');
+	}
+
 	render() {
 		let that = this;
 
