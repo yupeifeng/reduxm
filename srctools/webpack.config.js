@@ -14,7 +14,7 @@ module.exports = {
 		contentBase: './', //以public为根目录提供文件
 		historyApiFallback: true,
 		inline: true,
-		port: 9999
+		port: 9993
 	},
 	resolve: {
 		modules: [pathTool.resolve(__dirname, 'common'), pathTool.resolve(__dirname, 'util'), 'node_modules'],
