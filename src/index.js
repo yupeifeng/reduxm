@@ -1,45 +1,66 @@
 /**
- * 数据管理层
- */
-
-/**
- * 提供createStore方法(入参reactRouter,debug)绑定store后返回reactRouter
- * 提供getActionType方法获取对应store的actionType(入参storeName)
- * 提供getDevTools方法,返回调试工具视图和Route平级使用
+ * 数据注入层
  */
 import Store from './store/store';
-
-const store = Store.store; //store注解(入参storeName)
-const storeProps = Store.storeProps; //store数据更改响应type注解(入参actionType)
-const storeDestroy = Store.storeDestroy; //数据销毁注解(离开页面数据初始化）
-const storeLogs = Store.storeLogs; //数据改变日志跟踪注解(入参日志等级'waring','log','error')
-
 /**
- * 数据、reactDom、redux链接层
- * 由于我会继承你的ReactDom并重写componentWillUnmount生命周期
- * 所以
- * 在你的ReactDom想实现componentWillUnmount生命周期必须加上静态属性
- * 并且上下文还是ReactDom
- * 如下
- *  static componentWillUnmount (){
-        this._cons();
-    }
-
- 	_cons(){
-        console.log("生命周期销毁");
-    }
+ * store修饰器,处理整个store层存入数据工厂
+ * @param storeName(数据层名称)
+ * @return true
  */
-import ConnectStore from './connect/connectstore'; //链接层注解(入参storeList:页面所需storeName、destroyStoreList:离开页面初始化storeName)
+const store = Store.store;
+/**
+ * storeProps修饰器,按名称录入actionType
+ * @param actionType(数据改变响应type)
+ * @return target
+ */
+const storeProps = Store.storeProps;
+/**
+ * storeDestroy修饰器,按名称录入是否需要销毁
+ * @return target
+ */
+const storeDestroy = Store.storeDestroy;
+/**
+ * storeLogs修饰器,按名称录入日志级别
+ * @param level(日志级别)
+ * @returns target
+ */
+const storeLogs = Store.storeLogs;
 
 /**
- * 事件管理层
+ * ConnectStore方法,链接数据，事件和reactDom
+ * @params storeList[](页面所需数据层名称), destroyStoreList[](离开页面销毁数据层名称)
+ * @return reactDom
+ */
+import ConnectStore from './connect/connectstore';
+
+/**
+ * 事件注入层
  */
 import Action from './action/action';
-
-const action = Action.action; //action注解(入参actionName)
-const actionProps = Action.actionProps; //action层响应函数注解(入参actionFunName)
-const actionInjection = Action.actionInjection; //action事件注入注解,注入的react页面(入参actionName)
-const actionLogs = Action.actionLogs; //action事件日志跟踪注解(入参日志等级'waring','log','error')
+/**
+ * action修饰器,处理整个action层存入事件工厂
+ * @param actionName(事件层名称)
+ * @return target
+ */
+const action = Action.action;
+/**
+ * actionProps修饰器,按名称录入action
+ * @param actionFunName(事件名称)
+ * @return target
+ */
+const actionProps = Action.actionProps;
+/**
+ * actionLogs修饰器,按名称录入日志级别
+ * @param level(日志级别)
+ * @return target
+ */
+const actionLogs = Action.actionLogs;
+/**
+ * actionInjection修饰器,按名称反向注入事件到reactDom
+ * @param actionName(事件名称)
+ * @return target
+ */
+const actionInjection = Action.actionInjection;
 
 export {
 	Store,
@@ -50,6 +71,6 @@ export {
 	ConnectStore,
 	action,
 	actionProps,
-	actionInjection,
-	actionLogs
+	actionLogs,
+	actionInjection
 };

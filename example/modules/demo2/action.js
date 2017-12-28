@@ -2,6 +2,7 @@ import fetch from 'fetch/fetch';
 import ModalTip from 'modalTip';
 import { Store, action, actionProps, actionLogs } from 'reducermanager';
 const demo2Type = Store.getActionType('demo2Store');
+const demo2AllInitData = Store.getAllInitData('demo2Store');
 
 let getColumnList = userCode => {
 	let params = {};
@@ -39,6 +40,7 @@ class demo2Action {
 	@actionProps('changeDUserCode')
 	static changeDUserCode = dUserCode => async dispatch => {
 		dispatch({ type: demo2Type.change_dUserCode, dUserCode: dUserCode });
+		console.log(demo2AllInitData);
 	};
 
 	@actionProps('changeColumn')
