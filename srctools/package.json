@@ -9,7 +9,7 @@
     "antd": "^2.13.10",
     "babel-plugin-import": "^1.2.1",
     "echarts": "^3.8.5",
-    "immutable": "^3.8.2",
+    "immutable": "^4.0.0-rc.9",
     "moment": "^2.19.2",
     "react": "^16.1.0",
     "react-dom": "^16.1.0",

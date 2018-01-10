@@ -14,5 +14,5 @@ class demo2Store {
 
 	@storeProps('change_dUserCode')
 	@storeDestroy
-	static dUserCode = '';
+	static dUserCode = { a: '', b: { c: '' } };
 }

@@ -1,8 +1,7 @@
 import fetch from 'fetch/fetch';
 import ModalTip from 'modalTip';
-import { Store, action, actionProps, actionLogs } from 'reducermanager';
+import { Store, action, actionProps } from 'reducermanager';
 const demo2Type = Store.getActionType('demo2Store');
-const demo2AllInitData = Store.getAllInitData('demo2Store');
 
 let getColumnList = userCode => {
 	let params = {};
@@ -38,9 +37,9 @@ let getNewsList = (userCode, columnId) => {
 @action('demo2Action')
 class demo2Action {
 	@actionProps('changeDUserCode')
-	static changeDUserCode = dUserCode => async dispatch => {
+	static changeDUserCode = (value, dUserCode) => async dispatch => {
+		dUserCode.b.c = value;
 		dispatch({ type: demo2Type.change_dUserCode, dUserCode: dUserCode });
-		console.log(demo2AllInitData);
 	};
 
 	@actionProps('changeColumn')
@@ -59,7 +58,6 @@ class demo2Action {
 	};
 
 	@actionProps('changeState')
-	@actionLogs('log')
 	static changeState = (type, name, value) => async dispatch => {
 		let store = { type: type };
 		store[name] = value;

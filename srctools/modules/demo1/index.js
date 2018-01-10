@@ -15,13 +15,15 @@ const { Content } = Layout;
 @actionInjection('demo1Action')
 export default class demo1 extends React.Component {
 	componentDidMount() {
-		let that = this;
-		let changeNeedCode = that.props.changeNeedCode;
-		changeNeedCode('zhanghao');
+		this.props.changeNeedCode('zhanghao');
+		this.props.changeImmutableList(this.props.demo1Store.immutableList);
 	}
 
 	render() {
 		let that = this;
+
+		console.log(that.props.demo1Store.immutableList);
+		console.log(that.props.demo1Store.immutableList.toJS());
 
 		return (
 			<Layout style={{ padding: '0 24px 24px' }}>

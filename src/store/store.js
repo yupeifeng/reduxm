@@ -71,19 +71,16 @@ export default class Store {
 					if (storeLogsSignKey) {
 						switch (storeLogsSignKey) {
 							case 'waring':
-								console.warn(
-									`actionType:${storePropsSignKey}  storeName:${key}  storeSource:${JSON.stringify(action[key])}`
-								);
+								console.warn(`---actionType:${storePropsSignKey}---  \n ---storeName:${key}--- \n  ---storeSource:`);
+								console.warn(action[key]);
 								break;
 							case 'log':
-								console.log(
-									`actionType:${storePropsSignKey}  storeName:${key}  storeSource:${JSON.stringify(action[key])}`
-								);
+								console.warn(`---actionType:${storePropsSignKey}---  \n ---storeName:${key}--- \n  ---storeSource:`);
+								console.log(action[key]);
 								break;
 							case 'error':
-								console.error(
-									`actionType:${storePropsSignKey}  storeName:${key}  storeSource:${JSON.stringify(action[key])}`
-								);
+								console.warn(`---actionType:${storePropsSignKey}---  \n ---storeName:${key}--- \n  ---storeSource:`);
+								console.error(action[key]);
 								break;
 							default:
 								break;

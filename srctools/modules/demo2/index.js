@@ -36,7 +36,7 @@ export default class demo2 extends React.Component {
 							<Input
 								size="large"
 								placeholder="请输入D编号D00222然后回车"
-								value={that.props.demo2Store.dUserCode}
+								value={that.props.demo2Store.dUserCode.b.c}
 								onChange={e => that._handleChangeDUserCode(e, 'dUserCode')}
 								onPressEnter={() => that._onPressEnter()}
 							/>
@@ -62,7 +62,6 @@ export default class demo2 extends React.Component {
 	}
 
 	_handleChangeSelect(value) {
-		console.log(`selectText: ${value}`);
 		let that = this;
 		let changeState = that.props.changeState;
 
@@ -74,12 +73,12 @@ export default class demo2 extends React.Component {
 		let that = this;
 		let changeDUserCode = that.props.changeDUserCode;
 
-		changeDUserCode(e.target.value);
+		changeDUserCode(e.target.value, that.props.demo2Store.dUserCode);
 	}
 
 	_onPressEnter() {
 		let that = this;
 		let changeColumn = that.props.changeColumn;
-		changeColumn(that.props.demo2Store.dUserCode);
+		changeColumn(that.props.demo2Store.dUserCode.b.c);
 	}
 }
