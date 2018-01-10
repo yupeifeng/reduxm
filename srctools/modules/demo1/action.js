@@ -31,9 +31,16 @@ class demo1Action {
 
 	@actionProps('changeImmutableList')
 	@actionLogs('error')
-	static changeImmutableList = immutableList => async dispatch => {
+	static changeImmutableList = demo1Store => async dispatch => {
+		let immutableList = demo1Store.immutableList;
+		let immutableInList = demo1Store.immutableInList;
+
 		immutableList = immutable.set(immutableList, 0, 4);
+		immutableInList.immutableList[0] = immutable.set(immutableInList.immutableList[0], 0, 10);
+
 		dispatch({ type: demo1Type.change_immutableList, immutableList: immutableList });
+		dispatch({ type: demo1Type.change_immutableInList, immutableInList: immutableInList });
+
 		demo1AllInitStore.welcomeText = 'www---www';
 		console.log(demo1AllInitStore);
 	};

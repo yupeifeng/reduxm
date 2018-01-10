@@ -15,4 +15,10 @@ class demo1 {
 	@storeLogs('waring')
 	@storeDestroy
 	static immutableList = immutable.fromJS([1, 2, 3]);
+
+	@storeProps('change_immutableInList')
+	@storeDestroy
+	static immutableInList = {
+		immutableList: [immutable.fromJS([7, 8, 9])]
+	};
 }

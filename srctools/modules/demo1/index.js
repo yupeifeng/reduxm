@@ -16,7 +16,7 @@ const { Content } = Layout;
 export default class demo1 extends React.Component {
 	componentDidMount() {
 		this.props.changeNeedCode('zhanghao');
-		this.props.changeImmutableList(this.props.demo1Store.immutableList);
+		this.props.changeImmutableList(this.props.demo1Store);
 	}
 
 	render() {
@@ -24,6 +24,9 @@ export default class demo1 extends React.Component {
 
 		console.log(that.props.demo1Store.immutableList);
 		console.log(that.props.demo1Store.immutableList.toJS());
+
+		console.log(that.props.demo1Store.immutableInList.immutableList[0]);
+		console.log(that.props.demo1Store.immutableInList.immutableList[0].toJS());
 
 		return (
 			<Layout style={{ padding: '0 24px 24px' }}>

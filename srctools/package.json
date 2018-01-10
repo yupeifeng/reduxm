@@ -23,7 +23,8 @@
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.4",
     "redux-devtools-log-monitor": "^1.4.0",
-    "redux-devtools-dock-monitor": "^1.1.2"
+    "redux-devtools-dock-monitor": "^1.1.2",
+    "deepcopy": "^0.6.3"
   },
   "devDependencies": {
     "mockjs": "*",
