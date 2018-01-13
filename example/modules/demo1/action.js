@@ -24,14 +24,14 @@ let checkNeedCode = nickName => {
 @action('demo1Action')
 class demo1Action {
 	@actionProps('changeNeedCode')
-	static changeNeedCode = nickName => async dispatch => {
+	static changeNeedCode = nickName => async (dispatch, _this) => {
 		let needCode = await checkNeedCode(nickName);
 		dispatch({ type: demo1Type.change_needCode, needCode: needCode });
 	};
 
 	@actionProps('changeImmutableList')
 	@actionLogs('error')
-	static changeImmutableList = demo1Store => async dispatch => {
+	static changeImmutableList = demo1Store => async (dispatch, _this) => {
 		let immutableList = demo1Store.immutableList;
 		let immutableInList = demo1Store.immutableInList;
 

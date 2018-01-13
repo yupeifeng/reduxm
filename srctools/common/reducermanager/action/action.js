@@ -49,7 +49,8 @@ export default class Action {
 								break;
 						}
 					}
-					target[key](...args)(dispatch);
+					//传达target,给业务层action静态方法互相调用使用
+					target[key](...args)(dispatch, target);
 				};
 			}
 		}

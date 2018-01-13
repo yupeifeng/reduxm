@@ -37,13 +37,13 @@ let getNewsList = (userCode, columnId) => {
 @action('demo2Action')
 class demo2Action {
 	@actionProps('changeDUserCode')
-	static changeDUserCode = (value, dUserCode) => async dispatch => {
+	static changeDUserCode = (value, dUserCode) => async (dispatch, _this) => {
 		dUserCode.b.c = value;
 		dispatch({ type: demo2Type.change_dUserCode, dUserCode: dUserCode });
 	};
 
 	@actionProps('changeColumn')
-	static changeColumn = userCode => async dispatch => {
+	static changeColumn = userCode => async (dispatch, _this) => {
 		let columnList = await getColumnList(userCode);
 		dispatch({
 			type: demo2Type.change_columnName,
@@ -55,10 +55,12 @@ class demo2Action {
 			type: demo2Type.change_newsTitle,
 			newsTitle: newsList[0].newsTitle
 		});
+
+		_this.changeDUserCode('', { a: '', b: { c: '' } })(dispatch);
 	};
 
 	@actionProps('changeState')
-	static changeState = (type, name, value) => async dispatch => {
+	static changeState = (type, name, value) => async (dispatch, _this) => {
 		let store = { type: type };
 		store[name] = value;
 		dispatch(store);
