@@ -149,6 +149,11 @@
  	    @storeDestroy
  	    @storeLogs('log')
  	    static needCode = 1;
+ 	    
+ 	    @storeProps('change_dUserCode')
+        @storeDestroy
+        @storeLogs('log')
+        static dUserCode = '';
     }
  
  action.js:
@@ -158,11 +163,19 @@
     const demo1AllInitData = Store.getAllInitData('demo1Store');
     @action('demo1Action')
     class demo1Action {
+        @actionProps('changeDUserCode')
+        @actionLogs('error')
+    	static changeDUserCode = (dUserCode) => async (dispatch, _this) => {
+    		dispatch({ type: demo1Type.change_dUserCode, dUserCode: dUserCode });
+    	};
+    	
  	    @actionProps('changeNeedCode')
  	    @actionLogs('log')
- 	    static changeNeedCode = nickName => async dispatch => {
+ 	    static changeNeedCode = nickName => async (dispatch, _this) => {
  		    let needCode = await checkNeedCode(nickName);
  		    dispatch({ type: demo1Type.change_needCode, needCode: needCode });
+ 		    //action 内部方法互相调用
+ 		    _this.changeDUserCode('D00222')(dispatch,_this);
  		    console.log(demo1AllInitData);
  	    };
     }
@@ -185,6 +198,7 @@
         	let that = this;
         	return (
         		<div>是否需要验证码{that.props.demo1Store.needCode}</div>
+        		<div>D编号{that.props.demo1Store.dUserCode}</div>
         	);
         }
 	}

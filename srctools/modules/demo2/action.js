@@ -56,7 +56,7 @@ class demo2Action {
 			newsTitle: newsList[0].newsTitle
 		});
 
-		_this.changeDUserCode('', { a: '', b: { c: '' } })(dispatch);
+		_this.changeDUserCode('', { a: '', b: { c: '' } })(dispatch, _this);
 	};
 
 	@actionProps('changeState')
