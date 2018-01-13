@@ -32,7 +32,7 @@
 ```
 
 ### api
-```markdown
+```javascript
     /**
      * 数据注入层
      * 提供createStore、getDevTools、getActionType、getAllInitData四个方法
@@ -140,24 +140,27 @@
 ```
 
 ### How to use it
-```markdown
+
  reducer.js：
+ ```javascript
     import { store, storeProps, storeDestroy, storeLogs } from 'reducermanager';
-    @store('demo1Store')
-    class demo1 {
- 	    @storeProps('change_needCode')
- 	    @storeDestroy
- 	    @storeLogs('log')
- 	    static needCode = 1;
- 	    
- 	    @storeProps('change_dUserCode')
-        @storeDestroy
-        @storeLogs('log')
-        static dUserCode = '';
-    }
+        @store('demo1Store')
+        class demo1 {
+     	    @storeProps('change_needCode')
+     	    @storeDestroy
+     	    @storeLogs('log')
+     	    static needCode = 1;
+     	    
+     	    @storeProps('change_dUserCode')
+            @storeDestroy
+            @storeLogs('log')
+            static dUserCode = '';
+        }
+ ```
  
  action.js:
-    ...
+ 
+ ```javascript
     import { Store, action, actionProps, actionLogs } from 'reducermanager';
     const demo1Type = Store.getActionType('demo1Store');
     const demo1AllInitData = Store.getAllInitData('demo1Store');
@@ -179,10 +182,11 @@
  		    console.log(demo1AllInitData);
  	    };
     }
- 
+ ```
  
  index.js:
-    ...
+    
+ ```javascript
     import './action';
     import { ConnectStore, actionInjection } from 'reducermanager'; 
     @ConnectStore(['demo1Store'], ['demo1Store'])
@@ -197,15 +201,18 @@
 	    render() {
         	let that = this;
         	return (
-        		<div>是否需要验证码{that.props.demo1Store.needCode}</div>
-        		<div>D编号{that.props.demo1Store.dUserCode}</div>
+        	    <div>
+                   <div>是否需要验证码{that.props.demo1Store.needCode}</div>
+                   <div>D编号{that.props.demo1Store.dUserCode}</div>
+                </div>
         	);
         }
 	}
- 
+ ```
  
  app.js：
-    ...
+    
+ ```javascript
     import './demo1/reducer';
     import { Store } from 'reducermanager';
     let debug = true;
@@ -217,5 +224,4 @@
 	    debug
     );
     ReactDOM.render(router, document.getElementById('content'));
-
-```
+ ```
