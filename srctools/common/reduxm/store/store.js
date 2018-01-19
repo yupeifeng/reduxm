@@ -16,7 +16,7 @@ let DevTools = createDevTools(
 );
 
 //按名称存储actionType
-let storePropsSign = {};
+let storeActionTypeSign = {};
 //按名称存储是否需要销毁
 let storeDestroySign = {};
 //按名称存储是否需要日志的级别
@@ -28,10 +28,10 @@ let storeLogsSign = {};
 export default class Store {
 	/**
 	 * store修饰器,处理整个store层存入数据工厂
-	 * @param storeName(数据层名称)
+	 * @params storeName(数据层名称), allActionType(改变整个数据层的actionType), allStoreLogs(改变整个数据层的打印日志级别)
 	 * @return true
 	 */
-	static store = (storeName = '') => target => {
+	static store = (storeName = '', allActionType = '', allStoreLogs = '') => target => {
 		if (!storeName) {
 			return;
 		}
@@ -59,27 +59,27 @@ export default class Store {
 				excludeData[key] = target[key];
 			}
 
-			if (storePropsSign[key]) {
+			if (storeActionTypeSign[key]) {
 				//提取actionTypes
-				actionTypes[storePropsSign[key]] = `${storeName}_${storePropsSign[key]}`;
+				actionTypes[storeActionTypeSign[key]] = `${storeName}_${storeActionTypeSign[key]}`;
 
 				//提取actions
 				let storeLogsSignKey = storeLogsSign[key];
-				let storePropsSignKey = storePropsSign[key];
-				actions[`${storeName}_${storePropsSign[key]}`] = (state, action) => {
+				let storePropsSignKey = storeActionTypeSign[key];
+				actions[`${storeName}_${storeActionTypeSign[key]}`] = (state, action) => {
 					//埋入日志输出点,便于使用人员定位数据流向
 					if (storeLogsSignKey) {
 						switch (storeLogsSignKey) {
-							case 'waring':
+							case 'warn':
 								console.warn(`---actionType:${storePropsSignKey}---  \n ---storeName:${key}--- \n  ---storeSource:`);
 								console.warn(action[key]);
 								break;
 							case 'log':
-								console.warn(`---actionType:${storePropsSignKey}---  \n ---storeName:${key}--- \n  ---storeSource:`);
+								console.log(`---actionType:${storePropsSignKey}---  \n ---storeName:${key}--- \n  ---storeSource:`);
 								console.log(action[key]);
 								break;
 							case 'error':
-								console.warn(`---actionType:${storePropsSignKey}---  \n ---storeName:${key}--- \n  ---storeSource:`);
+								console.error(`---actionType:${storePropsSignKey}---  \n ---storeName:${key}--- \n  ---storeSource:`);
 								console.error(action[key]);
 								break;
 							default:
@@ -95,34 +95,68 @@ export default class Store {
 			}
 		}
 
+		//存在整个数据层改变的actionType
+		if (allActionType) {
+			actionTypes[allActionType] = `${storeName}_${allActionType}`;
+			actions[`${storeName}_${allActionType}`] = (state, action) => {
+				//埋入日志输出点,便于使用人员定位数据流向
+				if (allStoreLogs) {
+					switch (allStoreLogs) {
+						case 'warn':
+							console.warn(`---actionType:${allActionType}---  \n ---storeName:${storeName}--- \n  ---storeSource:`);
+							console.warn(action[storeName]);
+							break;
+						case 'log':
+							console.log(`---actionType:${allActionType}---  \n ---storeName:${storeName}--- \n  ---storeSource:`);
+							console.log(action[storeName]);
+							break;
+						case 'error':
+							console.error(`---actionType:${allActionType}---  \n ---storeName:${storeName}--- \n  ---storeSource:`);
+							console.error(action[storeName]);
+							break;
+						default:
+							break;
+					}
+				}
+				//改变redux的state并返回(真正改变值的方法)
+				return Object.assign({}, state, action[storeName]);
+			};
+		}
+
 		//按名称将actionTypes存入ActionTypeFactory
 		ActionTypeFactory.initActionType(storeName, actionTypes);
 		//按名称将数据、数据改变函数存入ReducerFactory
 		ReducerFactory.initReducer(storeName, initialData, excludeData, actions);
 
 		//清空记录标识等待下次数据存入
-		storePropsSign = {};
+		storeActionTypeSign = {};
 		storeDestroySign = {};
 		storeLogsSign = {};
 		return true;
 	};
 
 	/**
-	 * storeProps修饰器,按名称录入actionType
-	 * @param actionType(数据改变响应type)
+	 * storeActionType修饰器,按名称录入actionType
+	 * @params actionType(数据改变响应type), level(日志级别)
 	 * @return target
 	 */
-	static storeProps = (actionType = '') => (target, key) => {
+	static storeActionType = (actionType = '', level = '') => (target, key) => {
 		if (!target || typeof target != 'function') {
-			throw new Error(`target Invalid value of type ${typeof target} for appStoreProps.`);
+			throw new Error(`target Invalid value of type ${typeof target} for storeActionType.`);
 		}
 
 		if (!key || typeof key != 'string') {
-			throw new Error(`key Invalid value of type ${typeof key} for appStoreProps.`);
+			throw new Error(`key Invalid value of type ${typeof key} for storeActionType.`);
 		}
 
 		//按名称存储actionType
-		storePropsSign[key] = actionType;
+		storeActionTypeSign[key] = actionType;
+
+		//按名称存储是否需要日志的级别
+		if (level) {
+			storeLogsSign[key] = level;
+		}
+
 		return target;
 	};
 
@@ -141,25 +175,6 @@ export default class Store {
 
 		//按名称存储是否需要销毁
 		storeDestroySign[key] = true;
-		return target;
-	};
-
-	/**
-	 * storeLogs修饰器,按名称录入日志级别
-	 * @param level(日志级别)
-	 * @returns target
-	 */
-	static storeLogs = level => (target, key) => {
-		if (!target || typeof target != 'function') {
-			throw new Error(`target Invalid value of type ${typeof target} for storeLogs.`);
-		}
-
-		if (!key || typeof key != 'string') {
-			throw new Error(`key Invalid value of type ${typeof key} for storeLogs.`);
-		}
-
-		//按名称存储是否需要日志的级别
-		storeLogsSign[key] = level;
 		return target;
 	};
 

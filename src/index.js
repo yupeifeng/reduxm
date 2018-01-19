@@ -20,30 +20,24 @@
 import Store from './store/store';
 /**
  * store修饰器,处理整个store层存入数据工厂
- * @param storeName(数据层名称)
+ * @params storeName(数据层名称), allActionType(改变整个数据层的actionType), allStoreLogs(改变整个数据层的打印日志级别)
  * @return true
  */
 const store = Store.store;
 /**
- * storeProps修饰器,按名称录入actionType
- * @param actionType(数据改变响应type)
+ * storeActionType修饰器,按名称录入actionType
+ * @params actionType(数据改变响应type), level(日志级别)
  * @return target
  */
-const storeProps = Store.storeProps;
+const storeActionType = Store.storeActionType;
 /**
  * storeDestroy修饰器,按名称录入是否需要销毁
  * @return target
  */
 const storeDestroy = Store.storeDestroy;
-/**
- * storeLogs修饰器,按名称录入日志级别
- * @param level(日志级别)
- * @returns target
- */
-const storeLogs = Store.storeLogs;
 
 /**
- * ConnectStore方法,链接数据，事件和reactDom
+ * connectStore修饰器,连接数据,事件和reactDom
  * @params storeList[](页面所需数据层名称), destroyStoreList[](离开页面销毁数据层名称)
  * @return reactDom
  * 由于我会继承你的ReactDom并重写componentWillUnmount生命周期
@@ -55,11 +49,11 @@ const storeLogs = Store.storeLogs;
      	this._cons();
    	}
 
- 	_cons(){
+ _cons(){
         console.log("生命周期销毁");
     }
  */
-import ConnectStore from './connect/connectstore';
+import connectStore from './connect/connectstore';
 
 /**
  * 事件注入层
@@ -73,16 +67,10 @@ import Action from './action/action';
 const action = Action.action;
 /**
  * actionProps修饰器,按名称录入action
- * @param actionFunName(事件名称)
+ * @params actionFunName(事件名称), level(日志级别)
  * @return target
  */
 const actionProps = Action.actionProps;
-/**
- * actionLogs修饰器,按名称录入日志级别
- * @param level(日志级别)
- * @return target
- */
-const actionLogs = Action.actionLogs;
 /**
  * actionInjection修饰器,按名称反向注入事件到reactDom
  * @param actionName(事件名称)
@@ -90,15 +78,4 @@ const actionLogs = Action.actionLogs;
  */
 const actionInjection = Action.actionInjection;
 
-export {
-	Store,
-	store,
-	storeProps,
-	storeDestroy,
-	storeLogs,
-	ConnectStore,
-	action,
-	actionProps,
-	actionLogs,
-	actionInjection
-};
+export { Store, store, storeActionType, storeDestroy, connectStore, action, actionProps, actionInjection };

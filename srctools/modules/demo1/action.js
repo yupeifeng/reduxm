@@ -1,6 +1,6 @@
 import fetch from 'fetch/fetch';
 import ModalTip from 'modalTip';
-import { Store, action, actionProps, actionLogs } from 'reducermanager/index';
+import { Store, action, actionProps } from 'reduxm/index';
 import immutable from 'immutable';
 
 const demo1Type = Store.getActionType('demo1Store');
@@ -29,8 +29,7 @@ class demo1Action {
 		dispatch({ type: demo1Type.change_needCode, needCode: needCode });
 	};
 
-	@actionProps('changeImmutableList')
-	@actionLogs('error')
+	@actionProps('changeImmutableList', 'error')
 	static changeImmutableList = demo1Store => async (dispatch, _this) => {
 		let immutableList = demo1Store.immutableList;
 		let immutableInList = demo1Store.immutableInList;
@@ -38,8 +37,13 @@ class demo1Action {
 		immutableList = immutable.set(immutableList, 0, 4);
 		immutableInList.immutableList[0] = immutable.set(immutableInList.immutableList[0], 0, 10);
 
-		dispatch({ type: demo1Type.change_immutableList, immutableList: immutableList });
-		dispatch({ type: demo1Type.change_immutableInList, immutableInList: immutableInList });
+		dispatch({
+			type: demo1Type.change_demo1Store,
+			demo1Store: {
+				immutableList: immutableList,
+				immutableInList: immutableInList
+			}
+		});
 
 		demo1AllInitStore.welcomeText = 'www---www';
 		console.log(demo1AllInitStore);

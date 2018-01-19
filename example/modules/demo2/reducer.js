@@ -1,18 +1,18 @@
-import { store, storeProps, storeDestroy } from 'reducermanager';
+import { store, storeActionType, storeDestroy } from 'reduxm';
 
-@store('demo2Store')
+@store('demo2Store', 'change_demo2Store', 'warn')
 class demo2Store {
-	@storeProps('change_columnName')
+	@storeActionType('change_columnName')
 	@storeDestroy
 	static columnName = '';
 
-	@storeProps('change_newsTitle')
+	@storeActionType('change_newsTitle')
 	@storeDestroy
 	static newsTitle = '';
 
-	@storeProps('change_selectText') static selectText = '选择器1';
+	@storeActionType('change_selectText') static selectText = '选择器1';
 
-	@storeProps('change_dUserCode')
+	@storeActionType('change_dUserCode')
 	@storeDestroy
 	static dUserCode = { a: '', b: { c: '' } };
 }

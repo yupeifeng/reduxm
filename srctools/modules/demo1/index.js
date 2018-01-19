@@ -3,7 +3,7 @@ import { Layout, Breadcrumb, Button } from 'antd';
 import 'date-util';
 import ModalTip from 'modalTip';
 import './action';
-import { ConnectStore, actionInjection } from 'reducermanager/index';
+import { connectStore, actionInjection } from 'reduxm/index';
 
 const { Content } = Layout;
 
@@ -11,7 +11,7 @@ const { Content } = Layout;
  * demo1
  */
 
-@ConnectStore(['demo1Store'], ['demo1Store'])
+@connectStore(['demo1Store'], ['demo1Store'])
 @actionInjection('demo1Action')
 export default class demo1 extends React.Component {
 	componentDidMount() {

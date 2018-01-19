@@ -33,16 +33,16 @@ export default class Action {
 					//埋入日志输出点,便于使用人员定位事件触发
 					if (actionLogsSign[key]) {
 						switch (actionLogsSign[key]) {
-							case 'waring':
+							case 'warn':
 								console.warn(`---actionFunName:${actionPropsSign[key]}--- \n ---actionParams:`);
 								console.warn(...args);
 								break;
 							case 'log':
-								console.warn(`---actionFunName:${actionPropsSign[key]}--- \n ---actionParams:`);
+								console.log(`---actionFunName:${actionPropsSign[key]}--- \n ---actionParams:`);
 								console.log(...args);
 								break;
 							case 'error':
-								console.warn(`---actionFunName:${actionPropsSign[key]}--- \n ---actionParams:`);
+								console.error(`---actionFunName:${actionPropsSign[key]}--- \n ---actionParams:`);
 								console.error(...args);
 								break;
 							default:
@@ -63,10 +63,10 @@ export default class Action {
 
 	/**
 	 * actionProps修饰器,按名称录入action
-	 * @param actionFunName(事件名称)
+	 * @params actionFunName(事件名称), level(日志级别)
 	 * @return target
 	 */
-	static actionProps = (actionFunName = '') => (target, key) => {
+	static actionProps = (actionFunName = '', level = '') => (target, key) => {
 		if (!target || typeof target != 'function') {
 			throw new Error(`target Invalid value of type ${typeof target} for actionProps.`);
 		}
@@ -78,25 +78,10 @@ export default class Action {
 		//按名称录入action
 		actionPropsSign[key] = actionFunName;
 
-		return target;
-	};
-
-	/**
-	 * actionLogs修饰器,按名称录入日志级别
-	 * @param level(日志级别)
-	 * @return target
-	 */
-	static actionLogs = level => (target, key) => {
-		if (!target || typeof target != 'function') {
-			throw new Error(`target Invalid value of type ${typeof target} for actionLogs.`);
-		}
-
-		if (!key || typeof key != 'string') {
-			throw new Error(`key Invalid value of type ${typeof key} for actionLogs.`);
-		}
-
 		//按名称录入日志级别
-		actionLogsSign[key] = level;
+		if (level) {
+			actionLogsSign[key] = level;
+		}
 
 		return target;
 	};

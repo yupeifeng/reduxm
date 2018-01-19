@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout, Breadcrumb, Input, Select } from 'antd';
 import './action';
-import { Store, ConnectStore, actionInjection } from 'reducermanager';
+import { Store, connectStore, actionInjection } from 'reduxm';
 const demo2Type = Store.getActionType('demo2Store');
 
 const { Option } = Select;
@@ -10,7 +10,7 @@ const { Content } = Layout;
 /**
  * demo2
  */
-@ConnectStore(['demo2Store'], ['demo2Store'])
+@connectStore(['demo2Store'], ['demo2Store'])
 @actionInjection('demo2Action')
 export default class demo2 extends React.Component {
 	static componentWillUnmount() {

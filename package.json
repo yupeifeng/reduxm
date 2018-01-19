@@ -1,7 +1,7 @@
 {
-  "name": "reducermanager",
-  "version": "1.3.3",
-  "description": "Redux's reducer management and leave page data destruction",
+  "name": "reduxm",
+  "version": "1.0.0",
+  "description": "为了更好的使用Redux，进行二次封装",
   "main": "lib/index.js",
   "scripts": {
     "compile": "babel -d lib/ src/",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yupeifeng/reducermanager.git"
+    "url": "git+https://github.com/yupeifeng/reduxm.git"
   },
   "keywords": [
     "redux",
@@ -21,9 +21,9 @@
   "author": "yupeifeng",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/yupeifeng/reducermanager/issues"
+    "url": "https://github.com/yupeifeng/reduxm/issues"
   },
-  "homepage": "https://github.com/yupeifeng/reducermanager#readme",
+  "homepage": "https://github.com/yupeifeng/reduxm#readme",
   "dependencies": {
     "immutable": "^4.0.0-rc.9",
     "react": "^16.1.0",

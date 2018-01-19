@@ -2,11 +2,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 /**
- * ConnectStore方法,链接数据，事件和reactDom
+ * connectStore修饰器,连接数据,事件和reactDom
  * @params storeList[](页面所需数据层名称), destroyStoreList[](离开页面销毁数据层名称)
  * @return reactDom
  */
-const ConnectStore = (storeList = [], destroyStoreList = []) => target => {
+const connectStore = (storeList = [], destroyStoreList = []) => target => {
 	if (!target || typeof target != 'function') {
 		throw new Error(`target Invalid value of type ${typeof target} for ConnectStore.`);
 	}
@@ -65,4 +65,4 @@ const ConnectStore = (storeList = [], destroyStoreList = []) => target => {
 	return connect(mapStateToProps, mapDispatchToProps)(reactDom);
 };
 
-export default ConnectStore;
+export default connectStore;

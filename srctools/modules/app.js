@@ -8,7 +8,7 @@ import './css/main.css';
 
 import './demo1/reducer';
 import './demo2/reducer';
-import { Store } from 'reducermanager/index';
+import { Store } from 'reduxm/index';
 
 const demo1 = asyncComponent(() => import(/* webpackChunkName: 'demo1' */ './demo1'));
 const demo2 = asyncComponent(() => import(/* webpackChunkName: 'demo2' */ './demo2'));

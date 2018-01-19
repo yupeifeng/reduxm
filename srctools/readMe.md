@@ -6,7 +6,7 @@
 │ │
 │ └── fetch (封装fetch请求)
 │ │
-│ └── reducermanager
+│ └── reduxm
 │ │ │
 │ │ └─── reducermain  (各页面reducer汇总入口,高阶组件解决离开页面数据恢复问题)
 │ │ │

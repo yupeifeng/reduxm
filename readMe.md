@@ -1,53 +1,33 @@
-## Redux's reducer management and leave page data destruction
-### 
-(1)处理Redux的reducer集中管理的问题
+*为了更好的使用Redux，进行二次封装*
 
-(2)防止action的type重复问题
+### redux存在的问题
+* 一份store树，离开页面再次进入，数据不会初始化
+* reducer拆分造成汇总困难
+* action的type管理混乱，重复问题
+* 繁杂的使用规则，index页面action和store引入，纯函数reducer大量case仅仅为了改变一个值
 
-(3)离开页面再次进入该页面的数据初始化问题
-```markdown
-├── example
-│
-├── lib
-│
-├── src
-│
-├── srctools
-│
-├── .babelrc
-│
-├── .gitignore
-│
-├── .npmignore
-│
-├── .prettierignore
-│
-├── .prettierrc
-│
-├── package.json
-│
-├── package-lock.json
-│
-└── readMe.md
-```
+### 设计思想（@修饰器）
+* connectstore对ReactDom继承注入action和store，重写<font color=#FF3030 size=4 face="黑体">componentWillUnmount生命周期</font>，离开页面自动触发store初始化
+* 使用@修饰器、<font color=#FF3030 size=4 face="黑体">store</font>对reducer提取存入reducerfactory，<font color=#FF3030 size=4 face="黑体">action</font>对action提取存入actionfactory和actiontypefactory
+* action的type跟随store定义，并<font color=#FF3030 size=4 face="黑体">隐式添加命名空间</font>解决type重复问题、以及<font color=#FF3030 size=4 face="黑体">隐式case定义</font>省略大量case
 
 ### api
 ```javascript
     /**
      * 数据注入层
      * 提供createStore、getDevTools、getActionType、getAllInitData四个方法
-     * 
+     *
      * createStore方法,绑定数据到整个react路由层
      * @params router(react路由), debug(是否开启调试工具)
      * @return reactRouter
-     * 
+     *
      * getDevTools方法,获取调试工具视图
      * @return DevTools(调试工具视图)
-     * 
+     *
      * getActionType方法,获取storeName下所有actionType
      * @param storeName(数据层名称)
      * @return {}(storeName下所有actionType)
-     * 
+     *
      * getAllInitData方法,获取storeName下所有初始数据
      * @param storeName(数据层名称)
      * @return {}(storeName下所有初始数据)
@@ -55,30 +35,24 @@
     import Store from './store/store';
     /**
      * store修饰器,处理整个store层存入数据工厂
-     * @param storeName(数据层名称)
+     * @params storeName(数据层名称), allActionType(改变整个数据层的actionType), allStoreLogs(改变整个数据层的打印日志级别)
      * @return true
      */
     const store = Store.store;
     /**
-     * storeProps修饰器,按名称录入actionType
-     * @param actionType(数据改变响应type)
+     * storeActionType修饰器,按名称录入actionType
+     * @params actionType(数据改变响应type), level(日志级别)
      * @return target
      */
-    const storeProps = Store.storeProps;
+    const storeActionType = Store.storeActionType;
     /**
      * storeDestroy修饰器,按名称录入是否需要销毁
      * @return target
      */
     const storeDestroy = Store.storeDestroy;
-    /**
-     * storeLogs修饰器,按名称录入日志级别
-     * @param level(日志级别)
-     * @returns target
-     */
-    const storeLogs = Store.storeLogs;
     
     /**
-     * ConnectStore方法,链接数据，事件和reactDom
+     * connectStore修饰器,连接数据,事件和reactDom
      * @params storeList[](页面所需数据层名称), destroyStoreList[](离开页面销毁数据层名称)
      * @return reactDom
      * 由于我会继承你的ReactDom并重写componentWillUnmount生命周期
@@ -90,11 +64,11 @@
          	this._cons();
        	}
     
-     	_cons(){
+     _cons(){
             console.log("生命周期销毁");
         }
      */
-    import ConnectStore from './connect/connectstore';
+    import connectStore from './connect/connectstore';
     
     /**
      * 事件注入层
@@ -108,16 +82,10 @@
     const action = Action.action;
     /**
      * actionProps修饰器,按名称录入action
-     * @param actionFunName(事件名称)
+     * @params actionFunName(事件名称), level(日志级别)
      * @return target
      */
     const actionProps = Action.actionProps;
-    /**
-     * actionLogs修饰器,按名称录入日志级别
-     * @param level(日志级别)
-     * @return target
-     */
-    const actionLogs = Action.actionLogs;
     /**
      * actionInjection修饰器,按名称反向注入事件到reactDom
      * @param actionName(事件名称)
@@ -125,103 +93,11 @@
      */
     const actionInjection = Action.actionInjection;
     
-    export {
-    	Store,
-    	store,
-    	storeProps,
-    	storeDestroy,
-    	storeLogs,
-    	ConnectStore,
-    	action,
-    	actionProps,
-    	actionLogs,
-    	actionInjection
-    };
+    export { Store, store, storeActionType, storeDestroy, connectStore, action, actionProps, actionInjection };
 ```
 
 ### How to use it
+npm install reduxm;
 
- reducer.js：
- ```javascript
-    import { store, storeProps, storeDestroy, storeLogs } from 'reducermanager';
-        @store('demo1Store')
-        class demo1 {
-     	    @storeProps('change_needCode')
-     	    @storeDestroy
-     	    @storeLogs('log')
-     	    static needCode = 1;
-     	    
-     	    @storeProps('change_dUserCode')
-            @storeDestroy
-            @storeLogs('log')
-            static dUserCode = '';
-        }
- ```
- 
- action.js:
- 
- ```javascript
-    import { Store, action, actionProps, actionLogs } from 'reducermanager';
-    const demo1Type = Store.getActionType('demo1Store');
-    const demo1AllInitData = Store.getAllInitData('demo1Store');
-    @action('demo1Action')
-    class demo1Action {
-        @actionProps('changeDUserCode')
-        @actionLogs('error')
-    	static changeDUserCode = (dUserCode) => async (dispatch, _this) => {
-    		dispatch({ type: demo1Type.change_dUserCode, dUserCode: dUserCode });
-    	};
-    	
- 	    @actionProps('changeNeedCode')
- 	    @actionLogs('log')
- 	    static changeNeedCode = nickName => async (dispatch, _this) => {
- 		    let needCode = await checkNeedCode(nickName);
- 		    dispatch({ type: demo1Type.change_needCode, needCode: needCode });
- 		    //action 内部方法互相调用
- 		    _this.changeDUserCode('D00222')(dispatch,_this);
- 		    console.log(demo1AllInitData);
- 	    };
-    }
- ```
- 
- index.js:
-    
- ```javascript
-    import './action';
-    import { ConnectStore, actionInjection } from 'reducermanager'; 
-    @ConnectStore(['demo1Store'], ['demo1Store'])
-    @actionInjection('demo1Action')
-    export default class demo1 extends React.Component {
-	    componentDidMount() {
-		    let that = this;
-		    let changeNeedCode = that.props.changeNeedCode;
-		    changeNeedCode('zhanghao');
-	    }
-	            
-	    render() {
-        	let that = this;
-        	return (
-        	    <div>
-                   <div>是否需要验证码{that.props.demo1Store.needCode}</div>
-                   <div>D编号{that.props.demo1Store.dUserCode}</div>
-                </div>
-        	);
-        }
-	}
- ```
- 
- app.js：
-    
- ```javascript
-    import './demo1/reducer';
-    import { Store } from 'reducermanager';
-    let debug = true;
-    const router = Store.createStore(
-	    <HashRouter>
-            <Route exact path="/demo/demo1" component={demo1} />
-            {debug ? Store.getDevTools() : null}
-	    </HashRouter>,
-	    debug
-    );
-    ReactDOM.render(router, document.getElementById('content'));
- ```
+### example
+见example文件夹下

@@ -1,6 +1,6 @@
 import fetch from 'fetch/fetch';
 import ModalTip from 'modalTip';
-import { Store, action, actionProps } from 'reducermanager';
+import { Store, action, actionProps } from 'reduxm';
 const demo2Type = Store.getActionType('demo2Store');
 
 let getColumnList = userCode => {
@@ -45,15 +45,14 @@ class demo2Action {
 	@actionProps('changeColumn')
 	static changeColumn = userCode => async (dispatch, _this) => {
 		let columnList = await getColumnList(userCode);
-		dispatch({
-			type: demo2Type.change_columnName,
-			columnName: columnList[0].columnName
-		});
-
 		let newsList = await getNewsList(userCode, columnList[0].flowId);
+
 		dispatch({
-			type: demo2Type.change_newsTitle,
-			newsTitle: newsList[0].newsTitle
+			type: demo2Type.change_demo2Store,
+			demo2Store: {
+				newsTitle: newsList[0].newsTitle,
+				columnName: columnList[0].columnName
+			}
 		});
 
 		_this.changeDUserCode('', { a: '', b: { c: '' } })(dispatch, _this);
