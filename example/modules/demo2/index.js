@@ -1,9 +1,8 @@
 import React from 'react';
 import { Layout, Breadcrumb, Input, Select } from 'antd';
-import './action';
 import { Store, connectStore, actionInjection } from 'reduxm';
-const demo2Type = Store.getActionType('demo2Store');
 
+const demo2Type = Store.getActionType('demo2Store');
 const { Option } = Select;
 const { Content } = Layout;
 

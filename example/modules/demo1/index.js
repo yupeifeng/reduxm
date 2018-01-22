@@ -1,9 +1,7 @@
 import React from 'react';
 import { Layout, Breadcrumb, Button } from 'antd';
-import 'date-util';
-import ModalTip from 'modalTip';
-import './action';
 import { connectStore, actionInjection } from 'reduxm';
+import ModalTip from 'modalTip';
 
 const { Content } = Layout;
 
