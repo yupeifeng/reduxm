@@ -6,10 +6,14 @@ import HeaderMenu from './components/heard';
 import SiderMenu from './components/sider';
 import 'date-util';
 import './css/main.css';
-import './demo1/reducer';
-import './demo1/action';
-import './demo2/reducer';
-import './demo2/action';
+
+(r => {
+	r.keys().forEach(r);
+})(require.context('./', true, /reducer\.js/));
+(r => {
+	r.keys().forEach(r);
+})(require.context('./', true, /action\.js/));
+
 import { Store } from 'reduxm/index';
 
 const demo1 = asyncComponent(() => import(/* webpackChunkName: 'demo1' */ './demo1'));
