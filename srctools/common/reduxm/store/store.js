@@ -19,6 +19,8 @@ let DevTools = createDevTools(
 let storeActionTypeSign = {};
 //按名称存储是否需要销毁
 let storeDestroySign = {};
+//按名称存储计算属性
+let storeComputedSign = {};
 //按名称存储是否需要日志的级别
 let storeLogsSign = {};
 
@@ -50,11 +52,14 @@ export default class Store {
 		let excludeData = {};
 		let actionTypes = {};
 		let actions = {};
+
 		//循环整个store原目标对象,按要求提取以上数据
 		for (let key in target) {
 			//提取initialData、excludeData
 			if (storeDestroySign[key]) {
 				initialData[key] = target[key];
+			} else if (storeComputedSign[key]) {
+				initialData[key] = target[key].apply(target);
 			} else {
 				excludeData[key] = target[key];
 			}
@@ -66,6 +71,9 @@ export default class Store {
 				//提取actions
 				let storeLogsSignKey = storeLogsSign[key];
 				let storePropsSignKey = storeActionTypeSign[key];
+				let storeComputedSignTemp = storeComputedSign;
+				let storeLogsSignTemp = storeLogsSign;
+
 				actions[`${storeName}_${storeActionTypeSign[key]}`] = (state, action) => {
 					//埋入日志输出点,便于使用人员定位数据流向
 					if (storeLogsSignKey) {
@@ -89,6 +97,39 @@ export default class Store {
 
 					//改变redux的state并返回(真正改变值的方法)
 					let arg = {};
+
+					//重新得到计算者
+					for (let computedKey in target) {
+						if (storeComputedSignTemp[computedKey] && key == storeComputedSignTemp[computedKey]) {
+							arg[computedKey] = target[computedKey].apply(action);
+							//埋入日志输出点,便于使用人员定位数据流向
+							if (storeLogsSignTemp[computedKey]) {
+								switch (storeLogsSignTemp[computedKey]) {
+									case 'warn':
+										console.warn(
+											`---storeComputed:${computedKey}---  \n ---dependency:${storeComputedSignTemp[computedKey]}---`
+										);
+										console.warn(action[key]);
+										break;
+									case 'log':
+										console.log(
+											`---storeComputed:${computedKey}---  \n ---dependency:${storeComputedSignTemp[computedKey]}---`
+										);
+										console.log(action[key]);
+										break;
+									case 'error':
+										console.error(
+											`---storeComputed:${computedKey}---  \n ---dependency:${storeComputedSignTemp[computedKey]}---`
+										);
+										console.error(action[key]);
+										break;
+									default:
+										break;
+								}
+							}
+						}
+					}
+
 					arg[key] = action[key];
 					return Object.assign({}, state, arg);
 				};
@@ -98,6 +139,9 @@ export default class Store {
 		//存在整个数据层改变的actionType
 		if (allActionType) {
 			actionTypes[allActionType] = `${storeName}_${allActionType}`;
+			let storeComputedSignTemp = storeComputedSign;
+			let storeLogsSignTemp = storeLogsSign;
+
 			actions[`${storeName}_${allActionType}`] = (state, action) => {
 				//埋入日志输出点,便于使用人员定位数据流向
 				if (allStoreLogs) {
@@ -118,6 +162,39 @@ export default class Store {
 							break;
 					}
 				}
+
+				//重新得到计算者
+				for (let computedKey in target) {
+					if (
+						storeComputedSignTemp[computedKey] &&
+						action[storeName][storeComputedSignTemp[computedKey]] != undefined
+					) {
+						action[storeName][computedKey] = target[computedKey].apply(action[storeName]);
+						//埋入日志输出点,便于使用人员定位数据流向
+						if (storeLogsSignTemp[computedKey]) {
+							switch (storeLogsSignTemp[computedKey]) {
+								case 'warn':
+									console.warn(
+										`---storeComputed:${computedKey}---  \n ---dependency:${storeComputedSignTemp[computedKey]}---`
+									);
+									break;
+								case 'log':
+									console.log(
+										`---storeComputed:${computedKey}---  \n ---dependency:${storeComputedSignTemp[computedKey]}---`
+									);
+									break;
+								case 'error':
+									console.error(
+										`---storeComputed:${computedKey}---  \n ---dependency:${storeComputedSignTemp[computedKey]}---`
+									);
+									break;
+								default:
+									break;
+							}
+						}
+					}
+				}
+
 				//改变redux的state并返回(真正改变值的方法)
 				return Object.assign({}, state, action[storeName]);
 			};
@@ -131,6 +208,7 @@ export default class Store {
 		//清空记录标识等待下次数据存入
 		storeActionTypeSign = {};
 		storeDestroySign = {};
+		storeComputedSign = {};
 		storeLogsSign = {};
 		return true;
 	};
@@ -175,6 +253,30 @@ export default class Store {
 
 		//按名称存储是否需要销毁
 		storeDestroySign[key] = true;
+		return target;
+	};
+
+	/**
+	 * storeComputed修饰器,按名称录入计算者(由某个值计算得来)
+	 * @params dependency(依赖的属性被计算者), level(日志级别)
+	 * @return target
+	 */
+	static storeComputed = (dependency = '', level = '') => (target, key) => {
+		if (!target || typeof target != 'function') {
+			throw new Error(`target Invalid value of type ${typeof target} for storeComputed.`);
+		}
+		if (!key || typeof key != 'string') {
+			throw new Error(`key Invalid value of type ${typeof key} for storeComputed.`);
+		}
+
+		//按名称存储计算属性
+		storeComputedSign[key] = dependency;
+
+		//按名称存储是否需要日志的级别
+		if (level) {
+			storeLogsSign[key] = level;
+		}
+
 		return target;
 	};
 

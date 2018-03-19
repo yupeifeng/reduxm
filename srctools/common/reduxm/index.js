@@ -35,6 +35,12 @@ const storeActionType = Store.storeActionType;
  * @return target
  */
 const storeDestroy = Store.storeDestroy;
+/**
+ * storeComputed修饰器,按名称录入计算者(由某个值计算得来)
+ * @params dependency(依赖的属性被计算者), level(日志级别)
+ * @return target
+ */
+const storeComputed = Store.storeComputed;
 
 /**
  * connectStore修饰器,连接数据,事件和reactDom
@@ -78,4 +84,14 @@ const actionProps = Action.actionProps;
  */
 const actionInjection = Action.actionInjection;
 
-export { Store, store, storeActionType, storeDestroy, connectStore, action, actionProps, actionInjection };
+export {
+	Store,
+	store,
+	storeActionType,
+	storeDestroy,
+	storeComputed,
+	connectStore,
+	action,
+	actionProps,
+	actionInjection
+};

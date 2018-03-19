@@ -26,6 +26,7 @@ export default class demo1 extends React.Component {
 		console.log(that.props.demo1Store.immutableInList.immutableList[0]);
 		console.log(that.props.demo1Store.immutableInList.immutableList[0].toJS());
 
+        console.log(that.props.demo1Store.needCodeComputed);
 		return (
 			<Layout style={{ padding: '0 24px 24px' }}>
 				<Breadcrumb style={{ margin: '12px 0' }}>
