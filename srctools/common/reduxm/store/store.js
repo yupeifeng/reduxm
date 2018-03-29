@@ -17,8 +17,8 @@ let DevTools = createDevTools(
 
 //按名称存储actionType
 let storeActionTypeSign = {};
-//按名称存储是否需要销毁
-let storeDestroySign = {};
+//按名称存储是否不需要销毁
+let storeUnDestroySign = {};
 //按名称存储计算属性
 let storeComputedSign = {};
 //按名称存储是否需要日志的级别
@@ -56,12 +56,12 @@ export default class Store {
 		//循环整个store原目标对象,按要求提取以上数据
 		for (let key in target) {
 			//提取initialData、excludeData
-			if (storeDestroySign[key]) {
-				initialData[key] = target[key];
+			if (storeUnDestroySign[key]) {
+				excludeData[key] = target[key];
 			} else if (storeComputedSign[key]) {
 				initialData[key] = target[key].apply(target);
 			} else {
-				excludeData[key] = target[key];
+				initialData[key] = target[key];
 			}
 
 			if (storeActionTypeSign[key]) {
@@ -207,7 +207,7 @@ export default class Store {
 
 		//清空记录标识等待下次数据存入
 		storeActionTypeSign = {};
-		storeDestroySign = {};
+		storeUnDestroySign = {};
 		storeComputedSign = {};
 		storeLogsSign = {};
 		return true;
@@ -239,20 +239,20 @@ export default class Store {
 	};
 
 	/**
-	 * storeDestroy修饰器,按名称录入是否需要销毁
+	 * storeUnDestroy修饰器,按名称录入是否需要销毁
 	 * @return target
 	 */
-	static storeDestroy = (target, key) => {
+	static storeUnDestroy = (target, key) => {
 		if (!target || typeof target != 'function') {
-			throw new Error(`target Invalid value of type ${typeof target} for storeDestroy.`);
+			throw new Error(`target Invalid value of type ${typeof target} for storeUnDestroy.`);
 		}
 
 		if (!key || typeof key != 'string') {
-			throw new Error(`key Invalid value of type ${typeof key} for storeDestroy.`);
+			throw new Error(`key Invalid value of type ${typeof key} for storeUnDestroy.`);
 		}
 
 		//按名称存储是否需要销毁
-		storeDestroySign[key] = true;
+		storeUnDestroySign[key] = true;
 		return target;
 	};
 

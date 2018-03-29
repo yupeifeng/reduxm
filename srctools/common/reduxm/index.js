@@ -31,10 +31,10 @@ const store = Store.store;
  */
 const storeActionType = Store.storeActionType;
 /**
- * storeDestroy修饰器,按名称录入是否需要销毁
+ * storeUnDestroy修饰器,按名称录入是否不需要销毁
  * @return target
  */
-const storeDestroy = Store.storeDestroy;
+const storeUnDestroy = Store.storeUnDestroy;
 /**
  * storeComputed修饰器,按名称录入计算者(由某个值计算得来)
  * @params dependency(依赖的属性被计算者), level(日志级别)
@@ -43,21 +43,9 @@ const storeDestroy = Store.storeDestroy;
 const storeComputed = Store.storeComputed;
 
 /**
- * connectStore修饰器,连接数据,事件和reactDom
+ * connectStore修饰器,连接数据,事件和reactDom,代理target并完善componentWillUnmount生命周期离开页面触发数据销毁
  * @params storeList[](页面所需数据层名称), destroyStoreList[](离开页面销毁数据层名称)
  * @return reactDom
- * 由于我会继承你的ReactDom并重写componentWillUnmount生命周期
- * 所以
- * 在你的ReactDom想实现componentWillUnmount生命周期必须加上静态属性
- * 并且上下文还是ReactDom
- * 如下
- * 	static componentWillUnmount (){
-     	this._cons();
-   	}
-
- _cons(){
-        console.log("生命周期销毁");
-    }
  */
 import connectStore from './connect/connectstore';
 
@@ -88,7 +76,7 @@ export {
 	Store,
 	store,
 	storeActionType,
-	storeDestroy,
+	storeUnDestroy,
 	storeComputed,
 	connectStore,
 	action,

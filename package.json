@@ -1,6 +1,6 @@
 {
   "name": "reduxm",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "为了更好的使用Redux，进行二次封装",
   "main": "lib/index.js",
   "scripts": {

@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import React from 'react';
 
 /**
  * connectStore修饰器,连接数据,事件和reactDom
@@ -11,15 +12,14 @@ const connectStore = (storeList = [], destroyStoreList = []) => target => {
 		throw new Error(`target Invalid value of type ${typeof target} for ConnectStore.`);
 	}
 
-	//继承reactDom并重构componentWillUnmount生命周期离开页面触发数据销毁
-	class reactDom extends target {
+	//代理target并完善componentWillUnmount生命周期离开页面触发数据销毁
+	class reactDom extends React.Component {
 		componentWillUnmount() {
-			let that = this;
-			if (target.componentWillUnmount && typeof target.componentWillUnmount == 'function') {
-				target.componentWillUnmount.apply(that);
-			}
-			let sysRestState = that.props.sysRestState;
-			sysRestState();
+			this.props.sysRestState();
+		}
+
+		render() {
+			return React.createElement(target, Object.assign({}, this.props));
 		}
 	}
 

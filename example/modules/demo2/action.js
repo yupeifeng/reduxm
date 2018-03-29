@@ -37,8 +37,7 @@ let getNewsList = (userCode, columnId) => {
 @action('demo2Action')
 class demo2Action {
 	@actionProps('changeDUserCode')
-	static changeDUserCode = (value, dUserCode) => async (dispatch, _this) => {
-		dUserCode.b.c = value;
+	static changeDUserCode = dUserCode => async (dispatch, _this) => {
 		dispatch({ type: demo2Type.change_dUserCode, dUserCode: dUserCode });
 	};
 
@@ -55,7 +54,7 @@ class demo2Action {
 			}
 		});
 
-		_this.changeDUserCode('', { a: '', b: { c: '' } })(dispatch, _this);
+		_this.changeDUserCode('')(dispatch, _this);
 	};
 
 	@actionProps('changeState')
