@@ -9,7 +9,7 @@ const { Content } = Layout;
  * demo1
  */
 
-@connectStore(['demo1Store'], '', ['demo1Store'])
+@connectStore(['demo1Store'], ['demo1Store'])
 @actionInjection('demo1Action')
 export default class demo1 extends React.Component {
 	componentDidMount() {

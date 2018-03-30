@@ -19,17 +19,11 @@
  */
 import Store from './store/store';
 /**
- * store修饰器,处理整个共享性store层存入数据工厂
+ * store修饰器,处理整个store层存入数据工厂
  * @params storeName(数据层名称), allActionType(改变整个数据层的actionType), allStoreLogs(改变整个数据层的打印日志级别)
  * @return true
  */
 const store = Store.store;
-/**
- * localStore修饰器,处理整个组件级store层存入数据工厂(注意:改变共享性数据请通过this.props.popDispatch函数,入参同dispatch)
- * @params storeName(数据层名称), allActionType(改变整个数据层的actionType), allStoreLogs(改变整个数据层的打印日志级别)
- * @return true
- */
-const localStore = Store.localStore;
 /**
  * storeActionType修饰器,按名称录入actionType
  * @params actionType(数据改变响应type), level(日志级别)
@@ -49,8 +43,8 @@ const storeUnDestroy = Store.storeUnDestroy;
 const storeComputed = Store.storeComputed;
 
 /**
- * connectStore修饰器,连接数据,事件和reactDom,离开页面触发数据销毁
- * @params reducerList[](页面所需全局共享性数据层名称),storeName(组件级无需共享数据层名称),destroyStoreList[](离开页面销毁数据层名称)
+ * connectStore修饰器,连接数据,事件和reactDom,代理target并完善componentWillUnmount生命周期离开页面触发数据销毁
+ * @params storeList[](页面所需数据层名称), destroyStoreList[](离开页面销毁数据层名称)
  * @return reactDom
  */
 import connectStore from './connect/connectstore';
@@ -81,7 +75,6 @@ const actionInjection = Action.actionInjection;
 export {
 	Store,
 	store,
-	localStore,
 	storeActionType,
 	storeUnDestroy,
 	storeComputed,

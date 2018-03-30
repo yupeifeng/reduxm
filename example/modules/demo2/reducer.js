@@ -1,4 +1,4 @@
-import { store, storeActionType } from 'reduxm';
+import { store, storeActionType, storeUnDestroy } from 'reduxm';
 
 @store('demo2Store', 'change_demo2Store')
 class demo2Store {
@@ -6,5 +6,9 @@ class demo2Store {
 
 	@storeActionType('change_newsTitle') static newsTitle = '';
 
-	@storeActionType('change_selectText') static selectText = '选择器1';
+	@storeActionType('change_selectText')
+	@storeUnDestroy
+	static selectText = '选择器1';
+
+	@storeActionType('change_dUserCode') static dUserCode = '';
 }

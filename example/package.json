@@ -16,7 +16,7 @@
     "react-rangeslider": "^2.2.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "reduxm": "^2.0.0",
+    "reduxm": "^1.0.2",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.4"
   },
