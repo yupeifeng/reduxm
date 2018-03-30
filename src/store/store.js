@@ -1,4 +1,5 @@
 import ReducerFactory from './reducerfactory';
+import StoreFactory from './storefactory';
 import ActionTypeFactory from '../actiontype/actiontypefactory';
 import React from 'react';
 import thunk from 'redux-thunk';
@@ -29,7 +30,7 @@ let storeLogsSign = {};
  */
 export default class Store {
 	/**
-	 * store修饰器,处理整个store层存入数据工厂
+	 * store修饰器,处理整个共享性store层存入数据工厂
 	 * @params storeName(数据层名称), allActionType(改变整个数据层的actionType), allStoreLogs(改变整个数据层的打印日志级别)
 	 * @return true
 	 */
@@ -214,6 +215,191 @@ export default class Store {
 	};
 
 	/**
+	 * localStore修饰器,处理整个组件级store层存入数据工厂
+	 * @params storeName(数据层名称), allActionType(改变整个数据层的actionType), allStoreLogs(改变整个数据层的打印日志级别)
+	 * @return true
+	 */
+	static localStore = (storeName = '', allActionType = '', allStoreLogs = '') => target => {
+		if (!storeName) {
+			return;
+		}
+
+		if (!target || typeof target != 'function') {
+			throw new Error(`target Invalid value of type ${typeof target} for store.`);
+		}
+
+		/**
+		 * initialData storeName下,离开页面需要销毁的数据
+		 * excludeData storeName下,离开页面需要保留的数据
+		 * actionTypes  storeName下,所有actionType
+		 * actions      storeName下,所有数据改变函数
+		 */
+		let initialData = {};
+		let excludeData = {};
+		let actionTypes = {};
+		let actions = {};
+
+		//循环整个store原目标对象,按要求提取以上数据
+		for (let key in target) {
+			//提取initialData、excludeData
+			if (storeUnDestroySign[key]) {
+				excludeData[key] = target[key];
+			} else if (storeComputedSign[key]) {
+				initialData[key] = target[key].apply(target);
+			} else {
+				initialData[key] = target[key];
+			}
+
+			if (storeActionTypeSign[key]) {
+				//提取actionTypes
+				actionTypes[storeActionTypeSign[key]] = `${storeName}_${storeActionTypeSign[key]}`;
+
+				//提取actions
+				let storeLogsSignKey = storeLogsSign[key];
+				let storePropsSignKey = storeActionTypeSign[key];
+				let storeComputedSignTemp = storeComputedSign;
+				let storeLogsSignTemp = storeLogsSign;
+
+				actions[`${storeName}_${storeActionTypeSign[key]}`] = (state, action) => {
+					//埋入日志输出点,便于使用人员定位数据流向
+					if (storeLogsSignKey) {
+						switch (storeLogsSignKey) {
+							case 'warn':
+								console.warn(`---actionType:${storePropsSignKey}---  \n ---storeName:${key}--- \n  ---storeSource:`);
+								console.warn(action[key]);
+								break;
+							case 'log':
+								console.log(`---actionType:${storePropsSignKey}---  \n ---storeName:${key}--- \n  ---storeSource:`);
+								console.log(action[key]);
+								break;
+							case 'error':
+								console.error(`---actionType:${storePropsSignKey}---  \n ---storeName:${key}--- \n  ---storeSource:`);
+								console.error(action[key]);
+								break;
+							default:
+								break;
+						}
+					}
+
+					//改变redux的state并返回(真正改变值的方法)
+					let arg = {};
+
+					//重新得到计算者
+					for (let computedKey in target) {
+						if (storeComputedSignTemp[computedKey] && key == storeComputedSignTemp[computedKey]) {
+							arg[computedKey] = target[computedKey].apply(action);
+							//埋入日志输出点,便于使用人员定位数据流向
+							if (storeLogsSignTemp[computedKey]) {
+								switch (storeLogsSignTemp[computedKey]) {
+									case 'warn':
+										console.warn(
+											`---storeComputed:${computedKey}---  \n ---dependency:${storeComputedSignTemp[computedKey]}---`
+										);
+										console.warn(action[key]);
+										break;
+									case 'log':
+										console.log(
+											`---storeComputed:${computedKey}---  \n ---dependency:${storeComputedSignTemp[computedKey]}---`
+										);
+										console.log(action[key]);
+										break;
+									case 'error':
+										console.error(
+											`---storeComputed:${computedKey}---  \n ---dependency:${storeComputedSignTemp[computedKey]}---`
+										);
+										console.error(action[key]);
+										break;
+									default:
+										break;
+								}
+							}
+						}
+					}
+
+					arg[key] = action[key];
+					return Object.assign({}, state, arg);
+				};
+			}
+		}
+
+		//存在整个数据层改变的actionType
+		if (allActionType) {
+			actionTypes[allActionType] = `${storeName}_${allActionType}`;
+			let storeComputedSignTemp = storeComputedSign;
+			let storeLogsSignTemp = storeLogsSign;
+
+			actions[`${storeName}_${allActionType}`] = (state, action) => {
+				//埋入日志输出点,便于使用人员定位数据流向
+				if (allStoreLogs) {
+					switch (allStoreLogs) {
+						case 'warn':
+							console.warn(`---actionType:${allActionType}---  \n ---storeName:${storeName}--- \n  ---storeSource:`);
+							console.warn(action[storeName]);
+							break;
+						case 'log':
+							console.log(`---actionType:${allActionType}---  \n ---storeName:${storeName}--- \n  ---storeSource:`);
+							console.log(action[storeName]);
+							break;
+						case 'error':
+							console.error(`---actionType:${allActionType}---  \n ---storeName:${storeName}--- \n  ---storeSource:`);
+							console.error(action[storeName]);
+							break;
+						default:
+							break;
+					}
+				}
+
+				//重新得到计算者
+				for (let computedKey in target) {
+					if (
+						storeComputedSignTemp[computedKey] &&
+						action[storeName][storeComputedSignTemp[computedKey]] != undefined
+					) {
+						action[storeName][computedKey] = target[computedKey].apply(action[storeName]);
+						//埋入日志输出点,便于使用人员定位数据流向
+						if (storeLogsSignTemp[computedKey]) {
+							switch (storeLogsSignTemp[computedKey]) {
+								case 'warn':
+									console.warn(
+										`---storeComputed:${computedKey}---  \n ---dependency:${storeComputedSignTemp[computedKey]}---`
+									);
+									break;
+								case 'log':
+									console.log(
+										`---storeComputed:${computedKey}---  \n ---dependency:${storeComputedSignTemp[computedKey]}---`
+									);
+									break;
+								case 'error':
+									console.error(
+										`---storeComputed:${computedKey}---  \n ---dependency:${storeComputedSignTemp[computedKey]}---`
+									);
+									break;
+								default:
+									break;
+							}
+						}
+					}
+				}
+
+				//改变redux的state并返回(真正改变值的方法)
+				return Object.assign({}, state, action[storeName]);
+			};
+		}
+
+		//按名称将actionTypes存入ActionTypeFactory
+		ActionTypeFactory.initActionType(storeName, actionTypes);
+		//按名称将数据、数据改变函数存入ReducerFactory
+		StoreFactory.initStore(storeName, initialData, excludeData, actions);
+
+		//清空记录标识等待下次数据存入
+		storeActionTypeSign = {};
+		storeUnDestroySign = {};
+		storeComputedSign = {};
+		storeLogsSign = {};
+		return true;
+	};
+
+	/**
 	 * storeActionType修饰器,按名称录入actionType
 	 * @params actionType(数据改变响应type), level(日志级别)
 	 * @return target
@@ -325,6 +511,6 @@ export default class Store {
 	 * @return {}(storeName下所有初始数据)
 	 */
 	static getAllInitData = (storeName = '') => {
-		return ReducerFactory.getAllInitData(storeName);
+		return Object.assign({}, ReducerFactory.getAllInitData(storeName), StoreFactory.getAllInitData(storeName));
 	};
 }
