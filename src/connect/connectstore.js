@@ -23,6 +23,10 @@ const connectStore = (storeList = [], destroyStoreList = []) => target => {
 		}
 	}
 
+	for (let key in target) {
+		reactDom[key] = target[key];
+	}
+
 	//给页面props绑定所需数据
 	let mapStateToProps = state => {
 		let mapStateToPropsParams = {};
