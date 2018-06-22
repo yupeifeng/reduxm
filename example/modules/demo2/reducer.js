@@ -12,3 +12,8 @@ class demo2Store {
 
 	@storeActionType('change_dUserCode') static dUserCode = '';
 }
+
+@store('demo2Label', 'change_demo2Label')
+class demo2Label {
+	@storeActionType('change_label') static label = 'label';
+}

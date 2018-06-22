@@ -109,7 +109,7 @@
 ```
 
 ## 使用注意点
-1. redux数据共享导致，store改变所有组件都render，如发现页面卡顿把大的数据放入本组件state维护
+1. redux数据共享导致，取同一reducer数据层的页面会一起render，如发现页面卡顿参照example的demo2中label,将组件独有数据隔离
 2. 为了方便使用，Store中提供getAllInitData方法，获取storeName下所有初始数据，减少想手动初始化数据时的重复性定义。
 3. (dispatch, _this)，action中第二个的系统级入参，提供_this,方便action内部函数互相调用。
 4. app.js路由文件中，如果想使用如下方式：

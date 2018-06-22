@@ -1,6 +1,9 @@
 import React from 'react';
-import { Layout, Breadcrumb, Input, Select } from 'antd';
+import { Layout, Breadcrumb, Select } from 'antd';
 import { Store, connectStore, actionInjection } from 'reduxm/index';
+import Demo2Input from './components/input';
+import Demo2Label from './components/label';
+
 const demo2Type = Store.getActionType('demo2Store');
 
 const { Option } = Select;
@@ -24,13 +27,8 @@ export default class demo2 extends React.Component {
 				<Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
 					<div>
 						<div>
-							<Input
-								size="large"
-								placeholder="请输入D编号D00222然后回车"
-								value={that.props.demo2Store.dUserCode}
-								onChange={e => that._handleChangeDUserCode(e, 'dUserCode')}
-								onPressEnter={() => that._onPressEnter()}
-							/>
+							<Demo2Input />
+							<Demo2Label />
 						</div>
 						<div>栏目名称：{that.props.demo2Store.columnName}</div>
 						<div>新闻标题：{that.props.demo2Store.newsTitle}</div>
@@ -56,19 +54,6 @@ export default class demo2 extends React.Component {
 		let that = this;
 
 		that.props.changeState(demo2Type.change_selectText, 'selectText', value);
-	}
-
-	_handleChangeDUserCode(e, dUserCode) {
-		console.log(`${dUserCode}: ${e.target.value}`);
-		let that = this;
-
-		that.props.changeDUserCode(e.target.value);
-	}
-
-	_onPressEnter() {
-		let that = this;
-
-		that.props.changeColumn(that.props.demo2Store.dUserCode);
 	}
 
 	componentWillUnmount() {

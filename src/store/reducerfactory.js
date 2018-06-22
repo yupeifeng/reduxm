@@ -33,7 +33,7 @@ export default class ReducerFactory {
 					if (actions[action['type']]) {
 						return actions[action['type']](state, action);
 					} else {
-						return { ...state };
+						return state;
 					}
 			}
 		};
