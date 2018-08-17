@@ -119,7 +119,8 @@
 1. redux数据共享导致，取同一reducer数据层的页面会一起render，如发现页面卡顿参照example的demo2中label,将组件独有数据隔离
 2. 为了方便使用，Store中提供getAllInitData方法，获取storeName下所有初始数据，减少想手动初始化数据时的重复性定义。
 3. (dispatch, _this)，action中第二个的系统级入参，提供_this,方便action内部函数互相调用。
-4. app.js路由文件中，如果想使用如下方式：
+4. 为了简化省去回调，复用不同action文件中方法，提供actionGlobal注解解决
+5. app.js路由文件中，如果想使用如下方式：
 ```javascript
 (r => {
 	r.keys().forEach(r);
