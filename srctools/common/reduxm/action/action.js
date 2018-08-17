@@ -94,6 +94,12 @@ export default class Action {
 		//按名称将全局性action存入ActionFactory
 		ActionFactory.initGlobalAction(actionName, actionsGlobal);
 
+		//清空记录标识等待下次数据存入
+		actionPropsSign = {};
+		actionLogsSign = {};
+		actionGlobalSign = {};
+		actionGlobalLogsSign = {};
+
 		return target;
 	};
 
