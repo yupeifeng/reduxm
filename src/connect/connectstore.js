@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import React from 'react';
+import ActionFactory from '../action/actionfactory';
 
 /**
  * connectStore修饰器,连接数据,事件和reactDom
@@ -40,30 +41,42 @@ const connectStore = (storeList = [], destroyStoreList = []) => target => {
 
 	//给页面props绑定所需事件
 	let mapDispatchToProps = (dispatch, ownProps) => {
+		let mapDispatchToProps = {
+			sysRestState: bindActionCreators(
+				() => dispatch => {
+					destroyStoreList.forEach(key => {
+						dispatch({ type: `${key}_sys_restState` });
+					});
+				},
+				dispatch
+			)
+		};
+
 		if (target.mapDispatchToProps) {
-			return {
+			mapDispatchToProps = {
 				...target.mapDispatchToProps(dispatch, ownProps),
-				sysRestState: bindActionCreators(
-					() => dispatch => {
-						destroyStoreList.forEach(key => {
-							dispatch({ type: `${key}_sys_restState` });
-						});
-					},
-					dispatch
-				)
-			};
-		} else {
-			return {
-				sysRestState: bindActionCreators(
-					() => dispatch => {
-						destroyStoreList.forEach(key => {
-							dispatch({ type: `${key}_sys_restState` });
-						});
-					},
-					dispatch
-				)
+				...mapDispatchToProps
 			};
 		}
+
+		let mapDispatchToGlobal = ActionFactory.getGlobalAction();
+
+		if (mapDispatchToGlobal) {
+			for (let actionName in mapDispatchToGlobal) {
+				if (mapDispatchToGlobal[actionName] && Object.keys(mapDispatchToGlobal[actionName]).length > 0) {
+					mapDispatchToProps[actionName] = {};
+
+					for (let actionFunName in mapDispatchToGlobal[actionName]) {
+						mapDispatchToProps[actionName][actionFunName] = bindActionCreators(
+							mapDispatchToGlobal[actionName][actionFunName],
+							dispatch
+						);
+					}
+				}
+			}
+		}
+
+		return mapDispatchToProps;
 	};
 
 	return connect(mapStateToProps, mapDispatchToProps)(reactDom);

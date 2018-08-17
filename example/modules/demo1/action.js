@@ -1,6 +1,6 @@
 import fetch from 'fetch/fetch';
 import ModalTip from 'modalTip';
-import { Store, action, actionProps } from 'reduxm';
+import { Store, action, actionGlobal } from 'reduxm';
 
 const demo1Type = Store.getActionType('demo1Store');
 
@@ -21,7 +21,7 @@ let checkNeedCode = nickName => {
 
 @action('demo1Action')
 class demo1Action {
-	@actionProps('changeNeedCode')
+	@actionGlobal('changeNeedCode')
 	static changeNeedCode = nickName => async (dispatch, _this) => {
 		let needCode = await checkNeedCode(nickName);
 		dispatch({ type: demo1Type.change_needCode, needCode: needCode });

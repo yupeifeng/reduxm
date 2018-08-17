@@ -13,7 +13,7 @@ const { Content } = Layout;
 @actionInjection('demo1Action')
 export default class demo1 extends React.Component {
 	componentDidMount() {
-		this.props.changeNeedCode('zhanghao');
+		this.props.demo1Action.changeNeedCode('zhanghao');
 	}
 
 	render() {

@@ -66,6 +66,12 @@ const action = Action.action;
  */
 const actionProps = Action.actionProps;
 /**
+ * actionGlobal修饰器,录入全局性action,页面使用this.props[actionName][actionFunName],谨慎使用
+ * @params actionFunName(事件名称), level(日志级别)
+ * @return target
+ */
+const actionGlobal = Action.actionGlobal;
+/**
  * actionInjection修饰器,按名称反向注入事件到reactDom
  * @param actionName(事件名称)
  * @return target
@@ -81,5 +87,6 @@ export {
 	connectStore,
 	action,
 	actionProps,
+	actionGlobal,
 	actionInjection
 };

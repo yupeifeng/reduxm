@@ -18,6 +18,7 @@ export default class demo2 extends React.Component {
 	render() {
 		let that = this;
 
+		console.log(this.props);
 		return (
 			<Layout style={{ padding: '0 24px 24px' }}>
 				<Breadcrumb style={{ margin: '12px 0' }}>
