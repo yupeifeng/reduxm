@@ -6,3 +6,4 @@ example/package-lock.json
 srctools/build
 srctools/node_modules
 srctools/package-lock.json
+.idea
