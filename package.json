@@ -1,6 +1,6 @@
 {
   "name": "reduxm",
-  "version": "1.0.8",
+  "version": "1.1.2",
   "description": "为了更好的使用Redux，进行二次封装",
   "main": "lib/index.js",
   "scripts": {
@@ -24,6 +24,7 @@
     "url": "https://github.com/yupeifeng/reduxm/issues"
   },
   "homepage": "https://github.com/yupeifeng/reduxm#readme",
+  "typings": "./index.d.ts",
   "dependencies": {
     "immutable": "^4.0.0-rc.9",
     "react": "^16.1.0",
