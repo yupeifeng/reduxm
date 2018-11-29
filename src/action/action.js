@@ -35,20 +35,22 @@ export default class Action {
 		for (let key in target) {
 			if (actionPropsSign[key]) {
 				//提取actions
+				let logType = actionLogsSign[key];
+				let actionFunName = actionPropsSign[key];
 				actions[actionPropsSign[key]] = (...args) => dispatch => {
 					//埋入日志输出点,便于使用人员定位事件触发
-					if (actionLogsSign[key]) {
-						switch (actionLogsSign[key]) {
+					if (logType) {
+						switch (logType) {
 							case 'warn':
-								console.warn(`---actionFunName:${actionPropsSign[key]}--- \n ---actionParams:`);
+								console.warn(`---actionFunName:${actionFunName}--- \n ---actionParams:`);
 								console.warn(...args);
 								break;
 							case 'log':
-								console.log(`---actionFunName:${actionPropsSign[key]}--- \n ---actionParams:`);
+								console.log(`---actionFunName:${actionFunName}--- \n ---actionParams:`);
 								console.log(...args);
 								break;
 							case 'error':
-								console.error(`---actionFunName:${actionPropsSign[key]}--- \n ---actionParams:`);
+								console.error(`---actionFunName:${actionFunName}--- \n ---actionParams:`);
 								console.error(...args);
 								break;
 							default:
@@ -62,20 +64,22 @@ export default class Action {
 
 			if (actionGlobalSign[key]) {
 				//提取全局性actions
+				let logType = actionGlobalLogsSign[key];
+				let actionFunName = actionGlobalSign[key];
 				actionsGlobal[actionGlobalSign[key]] = (...args) => dispatch => {
 					//埋入日志输出点,便于使用人员定位事件触发
-					if (actionGlobalLogsSign[key]) {
-						switch (actionGlobalLogsSign[key]) {
+					if (logType) {
+						switch (logType) {
 							case 'warn':
-								console.warn(`---actionFunName:${actionGlobalSign[key]}--- \n ---actionParams:`);
+								console.warn(`---actionFunName:${actionFunName}--- \n ---actionParams:`);
 								console.warn(...args);
 								break;
 							case 'log':
-								console.log(`---actionFunName:${actionGlobalSign[key]}--- \n ---actionParams:`);
+								console.log(`---actionFunName:${actionFunName}--- \n ---actionParams:`);
 								console.log(...args);
 								break;
 							case 'error':
-								console.error(`---actionFunName:${actionGlobalSign[key]}--- \n ---actionParams:`);
+								console.error(`---actionFunName:${actionFunName}--- \n ---actionParams:`);
 								console.error(...args);
 								break;
 							default:
