@@ -49,8 +49,8 @@ class demo2Action {
 		dispatch({
 			type: demo2Type.change_demo2Store,
 			demo2Store: {
-				newsTitle: newsList[0].newsTitle,
-				columnName: columnList[0].columnName
+				newsTitle: newsList[0] && newsList[0].newsTitle ? newsList[0].newsTitle : '暂无信息',
+				columnName: columnList[0] && columnList[0].columnName ? columnList[0].columnName : '暂无信息'
 			}
 		});
 

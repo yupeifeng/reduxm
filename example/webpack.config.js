@@ -1,8 +1,9 @@
-var assetsViews = require('./assets-views');
 var pathTool = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin'); //css单独打包
-var css_path = '/build/style.css';
+var CleanWebpackPlugin = require('clean-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 const api_host = 'http://cloud.bm001.com/';
 
@@ -60,17 +61,16 @@ module.exports = {
 		]
 	},
 	plugins: [
+		new CleanWebpackPlugin('./build/*.*'),
 		new webpack.DefinePlugin({
 			api_host: JSON.stringify(api_host)
 		}),
-		assetsViews({
-			gloabal: {
-				api_host: JSON.stringify(api_host),
-				cssPath: css_path
-			},
-			from: './views/',
-			to: './'
+		new HtmlWebpackPlugin({
+			alwaysWriteToDisk: true,
+			template: './views/main.ejs',
+			filename: pathTool.resolve(__dirname, './main.html')
 		}),
+		new HtmlWebpackHarddiskPlugin(),
 		new ExtractTextPlugin({
 			filename: 'style.css',
 			disable: false,
